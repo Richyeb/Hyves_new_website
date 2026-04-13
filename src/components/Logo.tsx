@@ -1,12 +1,12 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import logo from "../assets/logo.svg";
 
 interface LogoProps {
   className?: string;
   iconOnly?: boolean;
   variant?: "default" | "white";
 }
-import logo from "../assets/logo.svg";
 
 export default function Logo({ className, iconOnly = false, variant = "default" }: LogoProps) {
   const iconColor = variant === "white" ? "#FFFFFF" : "#F9B509";
@@ -19,18 +19,6 @@ export default function Logo({ className, iconOnly = false, variant = "default" 
   alt="Logo"
   className="w-20 h-20 object-contain"
 />
-
-      {!iconOnly && (
-        <span 
-          className={cn(
-            "text-2xl font-bold tracking-tight",
-            variant === "white" ? "text-white" : "text-hyves-black"
-          )}
-          style={{ color: textColor }}
-        >
-          hyves
-        </span>
-      )}
     </div>
   );
 }
