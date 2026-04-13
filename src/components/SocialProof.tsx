@@ -23,11 +23,14 @@ export default function SocialProof() {
         </p>
         
         <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          {partners.map((partner) => (
-            <div key={partner} className="text-2xl font-black text-slate-300 hover:text-hyves-black transition-colors cursor-default">
-              {partner}
-            </div>
-          ))}
+          {partners.map((logo, index) => (
+  <img
+    key={index}
+    src={logo}
+    alt="Partner logo"
+    className="h-10 md:h-12 object-contain grayscale hover:grayscale-0 transition duration-300"
+  />
+))}
         </div>
       </div>
     </section>
