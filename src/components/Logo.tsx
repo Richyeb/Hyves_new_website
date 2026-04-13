@@ -17,7 +17,7 @@ export default function Logo({ className, iconOnly = false, variant = "default" 
       <img
   src={logo}
   alt="Logo"
-  className="w-10 h-10 object-contain"
+  className="w-20 h-20 object-contain"
 />
 
       {!iconOnly && (
