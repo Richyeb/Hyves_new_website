@@ -1,7 +1,17 @@
 import { motion } from "motion/react";
 
+import Vanni from "@/assets/partners/vanni.png";
+import Fincra from "@/assets/partners/fincra.png";
+import bold from "@/assets/partners/bold.png";
+import peswa from "@/assets/partners/peswa.png";
+import prembly from "@/assets/partners/prembly.png";
+
 const partners = [
-  "Partner One", "Partner Two", "Partner Three", "Partner Four", "Partner Five"
+  vanni,
+  fincra,
+  bold,
+  peswa,
+  prembly
 ];
 
 export default function SocialProof() {
