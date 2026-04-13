@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 
-import Vanni from "@/assets/partners/vanni.png";
-import Fincra from "@/assets/partners/fincra.png";
+import vanni from "@/assets/partners/vanni.png";
+import fincra from "@/assets/partners/fincra.png";
 import bold from "@/assets/partners/bold.png";
 import peswa from "@/assets/partners/peswa.png";
 import prembly from "@/assets/partners/prembly.png";
