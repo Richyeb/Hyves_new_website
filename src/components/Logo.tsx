@@ -6,7 +6,7 @@ interface LogoProps {
   iconOnly?: boolean;
   variant?: "default" | "white";
 }
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.svg";
 
 export default function Logo({ className, iconOnly = false, variant = "default" }: LogoProps) {
   const iconColor = variant === "white" ? "#FFFFFF" : "#F9B509";
