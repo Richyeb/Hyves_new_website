@@ -33,7 +33,7 @@ export default function Navbar() {
           : "bg-transparent border-transparent py-2"
       )}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between h-10">
+      <div className="container mx-auto px-6 flex items-center justify-between h-14">
         <Link to="/" className="hover:opacity-80 transition-opacity">
           <Logo />
         </Link>
