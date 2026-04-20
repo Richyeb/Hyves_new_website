@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 
-import vanni from "@/assets/Partners/vanni.png";
+import vanni from "@/assets/Partners/Vanni.png";
 
 const partners = [
   vanni,
