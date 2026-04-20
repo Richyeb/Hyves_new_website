@@ -40,7 +40,7 @@ export default function Product() {
               {/* Laptop Mockup */}
               <div className="relative z-10 rounded-2xl border-8 border-slate-800 bg-slate-800 shadow-2xl overflow-hidden aspect-[16/10]">
                 <img 
-                  src="/src/assets/product-laptop.svg" 
+                  src="/product-laptop.svg" 
                   alt="Hyves Dashboard on Laptop" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -55,7 +55,7 @@ export default function Product() {
                 className="absolute -bottom-10 -left-10 z-20 w-1/3 rounded-[2.5rem] border-8 border-slate-800 bg-slate-800 shadow-2xl overflow-hidden aspect-[9/19]"
               >
                 <img 
-                  src="/src/assets/product-mobile.svg" 
+                  src="/product-mobile.svg" 
                   alt="Hyves Mobile App" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
