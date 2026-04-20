@@ -23,7 +23,7 @@ export default function SocialProof() {
           Trusted by leading institutions & cooperatives
         </p>
         
-        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20">
           {partners.map((logo, index) => (
   <img
     key={index}
