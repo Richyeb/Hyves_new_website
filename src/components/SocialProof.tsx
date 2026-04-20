@@ -29,7 +29,7 @@ export default function SocialProof() {
     key={index}
     src={logo}
     alt="Partner logo"
-    className="h-10 md:h-12 object-contain grayscale hover:grayscale-0 transition duration-300"
+    className="h-10 md:h-12 object-contain"
   />
 ))}
         </div>
