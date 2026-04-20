@@ -4,22 +4,16 @@ import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Sarah Johnson",
-    role: "CEO, Green Valley Cooperative",
-    content: "Hyves has transformed how we manage our cooperative operations. The platform is intuitive and has significantly improved our member engagement.",
-    avatar: "/api/placeholder/64/64"
+    name: "Chief Omoh",
+    role: "Vanni International Security System Cooperative Multipurpose Society Limited",
+    location: "Lagos State",
+    content: "Members that left the Cooperative are now coming back"
   },
   {
-    name: "Michael Chen",
-    role: "Director, TechCorp Staff Cooperative",
-    content: "The automated payroll deductions and loan management features have saved us countless hours. Highly recommend for any cooperative.",
-    avatar: "/api/placeholder/64/64"
-  },
-  {
-    name: "Amara Okafor",
-    role: "President, AgriCoop Alliance",
-    content: "Managing agricultural inputs and contributions has never been easier. Hyves scales perfectly with our growing membership.",
-    avatar: "/api/placeholder/64/64"
+    name: "Mr. Goddey",
+    role: "APCAA Greenfields Multi-Purpose Cooperative Society Limited",
+    location: "Edo State",
+    content: "The platform is robust addressing key processes we need. They are also quick to continue improving as we are one of their beta customers"
   }
 ];
 
@@ -43,7 +37,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="py-24 bg-slate-50">
+    <section className="py-16 bg-hyves-bg">
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-hyves-black mb-4">
@@ -63,21 +57,15 @@ export default function Testimonials() {
             >
               {testimonials.map((testimonial, index) => (
                 <div key={index} className="w-full flex-shrink-0 px-4">
-                  <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-                    <Quote className="w-8 h-8 text-hyves-green mx-auto mb-4" />
-                    <p className="text-lg text-slate-700 mb-6 italic">
+                  <div className="bg-white p-6 rounded-lg shadow-md text-center border-t-4 border-hyves-gold">
+                    <Quote className="w-6 h-6 text-hyves-gold mx-auto mb-3" />
+                    <p className="text-base text-slate-700 mb-4 italic">
                       "{testimonial.content}"
                     </p>
-                    <div className="flex items-center justify-center">
-                      <img
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
-                        className="w-12 h-12 rounded-full mr-4"
-                      />
-                      <div>
-                        <h4 className="font-semibold text-hyves-black">{testimonial.name}</h4>
-                        <p className="text-sm text-slate-600">{testimonial.role}</p>
-                      </div>
+                    <div className="text-center">
+                      <h4 className="font-semibold text-hyves-black">{testimonial.name}</h4>
+                      <p className="text-sm text-slate-600">{testimonial.role}</p>
+                      <p className="text-xs text-slate-500 mt-1">{testimonial.location}</p>
                     </div>
                   </div>
                 </div>

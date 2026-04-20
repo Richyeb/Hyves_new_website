@@ -9,7 +9,8 @@ import Logo from "@/components/Logo";
 const navLinks = [
   { name: "Product", href: "/product" },
   { name: "How it works", href: "/how-it-works" },
-  { name: "About", href: "/about" },
+  { name: "About Hyves", href: "/about" },
+  { name: "Contact Us", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -44,7 +45,9 @@ export default function Navbar() {
             <Link
               key={link.name}
               to={link.href}
-              className="text-sm font-medium text-slate-600 hover:text-hyves-emerald transition-colors"
+              className={`text-sm font-medium hover:text-hyves-emerald transition-colors ${
+                link.name === "About Hyves" ? "text-hyves-gold" : "text-slate-600"
+              }`}
             >
               {link.name}
             </Link>
@@ -53,10 +56,10 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-4">
           <Button variant="ghost" className="text-sm font-medium" asChild>
-            <a href="/login">Login</a>
+            <a href="https://app.hyves.ng/login">Login</a>
           </Button>
           <Button className="bg-hyves-navy hover:bg-hyves-navy/90 text-white rounded-full px-6" asChild>
-            <a href="/get-started">Get Started</a>
+            <a href="/contact">Get Started</a>
           </Button>
         </div>
 
@@ -91,10 +94,10 @@ export default function Navbar() {
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-slate-100">
                 <Button variant="outline" className="w-full justify-center" asChild>
-                  <a href="/login">Login</a>
+                  <a href="https://app.hyves.ng/login">Login</a>
                 </Button>
                 <Button className="w-full justify-center bg-hyves-navy text-white" asChild>
-                  <a href="/get-started">Get Started</a>
+                  <a href="/contact">Get Started</a>
                 </Button>
               </div>
             </div>

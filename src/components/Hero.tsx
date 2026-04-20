@@ -31,7 +31,7 @@ export default function Hero() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Button size="lg" className="bg-hyves-black hover:bg-hyves-black/90 text-white rounded-full px-8 h-14 text-base font-semibold group" asChild>
-              <a href="/get-started">
+              <a href="/contact">
                 Get Started for Free
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
