@@ -33,19 +33,6 @@ export default function Blog() {
   return (
     <div className="pt-32 pb-20 bg-hyves-bg min-h-screen">
       <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold text-hyves-black mb-6"
-          >
-            Hyves Blog
-          </motion.h1>
-          <p className="text-lg text-slate-600">
-            Insights, updates, and stories from the heart of community finance.
-          </p>
-        </div>
-
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="w-10 h-10 border-4 border-hyves-gold border-t-transparent rounded-full animate-spin" />
