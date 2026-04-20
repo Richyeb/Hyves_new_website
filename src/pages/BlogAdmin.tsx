@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Trash2, Save, X, Image as ImageIcon, Briefcase, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import AdminProtection from "@/components/AdminProtection";
 
 interface Post {
   id: string;
@@ -139,6 +140,7 @@ export default function BlogAdmin() {
   };
 
   return (
+    <AdminProtection>
     <div className="pt-32 pb-20 bg-slate-50 min-h-screen">
       <div className="container mx-auto px-6 max-w-5xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
@@ -447,5 +449,6 @@ export default function BlogAdmin() {
         )}
       </AnimatePresence>
     </div>
+    </AdminProtection>
   );
 }
