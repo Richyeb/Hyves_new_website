@@ -10,9 +10,9 @@ import prembly from "@/assets/Partners/Prembly.png";
 const partners = [
   bold,
   fincra,
+  vanni,
   peswa,
   prembly,
-  vanni,
 ];
 
 export default function SocialProof() {
