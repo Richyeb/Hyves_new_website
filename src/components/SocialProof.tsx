@@ -2,10 +2,10 @@ import { motion } from "motion/react";
 
 
 import vanni from "@/assets/Partners/Vanni.png";
-import bold from "@/assets/Partners/bold.png";
-import fincra from "@/assets/Partners/fincra.png";
-import peswa from "@/assets/Partners/peswa.png";
-import prembly from "@/assets/Partners/prembly.png";
+import bold from "@/assets/Partners/Bold.png";
+import fincra from "@/assets/Partners/Fincra.png";
+import peswa from "@/assets/Partners/Peswa.png";
+import prembly from "@/assets/Partners/Prembly.png";
 
 const partners = [
   bold,
