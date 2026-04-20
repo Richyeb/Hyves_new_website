@@ -26,12 +26,14 @@ export default function CTA() {
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="bg-hyves-gold hover:bg-hyves-gold/90 text-hyves-black rounded-full px-10 h-14 text-base font-bold group w-full sm:w-auto">
-                  Get Started Now
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <Button size="lg" className="bg-hyves-gold hover:bg-hyves-gold/90 text-hyves-black rounded-full px-10 h-14 text-base font-bold group w-full sm:w-auto" asChild>
+                  <a href="/contact">
+                    Get Started Now
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
                 </Button>
                 <Button size="lg" variant="outline" className="text-hyves-gold border-hyves-gold hover:bg-hyves-gold hover:text-hyves-black rounded-full px-10 h-14 text-base font-bold w-full sm:w-auto" asChild>
-                  <a href="/login">Login to Account</a>
+                  <a href="https://app.hyves.ng/login">Login to Account</a>
                 </Button>
               </div>
               
