@@ -42,15 +42,19 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.href}
-              className={`text-sm font-medium hover:text-hyves-emerald transition-colors ${
-                link.name === "About Hyves" ? "text-hyves-gold" : "text-slate-600"
-              }`}
-            >
-              {link.name}
-            </Link>
+            link.name === "About Hyves" ? (
+              <span key={link.name} className="text-sm font-medium text-slate-600 hover:text-hyves-emerald transition-colors">
+                About <span className="font-bold">Hyves</span>
+              </span>
+            ) : (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="text-sm font-medium text-slate-600 hover:text-hyves-emerald transition-colors"
+              >
+                {link.name}
+              </Link>
+            )
           ))}
         </div>
 
@@ -83,14 +87,24 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-6 gap-4">
               {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-lg font-medium text-slate-600"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                </Link>
+                link.name === "About Hyves" ? (
+                  <span
+                    key={link.name}
+                    className="text-lg font-medium text-slate-600"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    About <span className="font-bold">Hyves</span>
+                  </span>
+                ) : (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="text-lg font-medium text-slate-600"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-slate-100">
                 <Button variant="outline" className="w-full justify-center" asChild>

@@ -53,6 +53,7 @@ export default function Footer() {
             <h4 className="font-bold text-hyves-black mb-6">Product</h4>
             <ul className="space-y-4">
               <li><Link to="/product" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Features</Link></li>
+              <li><Link to="/contact" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Get Started</Link></li>
             </ul>
           </div>
 
