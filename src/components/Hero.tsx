@@ -7,26 +7,39 @@ export default function Hero() {
     <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-hyves-bg">
       {/* Creative Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Gradient orbs */}
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-hyves-gold/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-tl from-hyves-navy/10 to-transparent rounded-full blur-3xl" />
+        {/* Large gradient orbs with animation */}
+        <div className="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] bg-gradient-to-br from-amber-200/20 via-hyves-gold/10 to-transparent rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-gradient-to-tl from-slate-800/20 via-hyves-navy/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-hyves-gold/5 to-hyves-navy/5 rounded-full blur-3xl" />
         
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" 
+        {/* Animated mesh pattern */}
+        <div className="absolute inset-0 opacity-[0.02]" 
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #000 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
+            backgroundImage: `linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
           }}
         />
         
-        {/* Decorative lines */}
-        <div className="absolute top-20 left-10 w-px h-32 bg-gradient-to-b from-hyves-gold/30 to-transparent" />
-        <div className="absolute top-40 right-20 w-px h-48 bg-gradient-to-b from-hyves-navy/20 to-transparent" />
-        <div className="absolute bottom-32 left-1/3 w-px h-24 bg-gradient-to-b from-hyves-gold/20 to-transparent" />
+        {/* Floating geometric shapes */}
+        <div className="absolute top-24 left-[15%] w-16 h-16 border-2 border-hyves-gold/20 rotate-12 animate-float" style={{ animationDelay: '0s' }} />
+        <div className="absolute top-40 right-[20%] w-12 h-12 bg-hyves-gold/10 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-32 left-[25%] w-20 h-20 border border-hyves-navy/15 rotate-45 animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-20 right-[15%] w-14 h-14 bg-hyves-navy/10 rounded-full animate-float" style={{ animationDelay: '0.5s' }} />
         
-        {/* Subtle circles */}
-        <div className="absolute top-1/4 right-1/3 w-32 h-32 border border-hyves-gold/10 rounded-full" />
-        <div className="absolute bottom-1/4 left-1/4 w-24 h-24 border border-hyves-navy/10 rounded-full" />
+        {/* Accent lines */}
+        <div className="absolute top-32 left-0 w-24 h-px bg-gradient-to-r from-hyves-gold/40 to-transparent" />
+        <div className="absolute top-48 right-0 w-32 h-px bg-gradient-to-l from-hyves-navy/30 to-transparent" />
+        <div className="absolute bottom-40 left-20 w-px h-40 bg-gradient-to-b from-hyves-gold/30 to-transparent" />
+        <div className="absolute bottom-24 right-16 w-px h-32 bg-gradient-to-t from-hyves-navy/20 to-transparent" />
+        
+        {/* Decorative dots */}
+        <div className="absolute top-28 right-1/4 w-2 h-2 bg-hyves-gold/40 rounded-full" />
+        <div className="absolute top-60 left-1/3 w-3 h-3 bg-hyves-navy/30 rounded-full" />
+        <div className="absolute bottom-48 right-1/3 w-2 h-2 bg-hyves-gold/30 rounded-full" />
+        <div className="absolute bottom-28 left-1/4 w-3 h-3 bg-hyves-navy/20 rounded-full" />
+        
+        {/* Subtle wave pattern */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-hyves-bg to-transparent" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
