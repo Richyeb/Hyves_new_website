@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import HowItWorks from "@/components/HowItWorks";
 
 export default function Process() {
   return (
@@ -15,6 +16,7 @@ export default function Process() {
           </p>
         </motion.div>
       </div>
+      <HowItWorks />
     </div>
   );
 }
