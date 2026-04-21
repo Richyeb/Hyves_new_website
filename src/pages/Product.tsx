@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import Features from "@/components/Features";
+import ProductHeroAnimation from "@/components/ProductHeroAnimation";
 
 export default function Product() {
   return (
@@ -31,7 +32,9 @@ export default function Product() {
               </div>
             </motion.div>
 
-            <div className="lg:w-1/2 relative min-h-[300px]" />
+            <div className="lg:w-1/2 relative">
+              <ProductHeroAnimation />
+            </div>
           </div>
         </div>
       </section>
