@@ -1,7 +1,72 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Shield, CheckCircle, AlertTriangle, FileText, Users, Lock, Globe } from "lucide-react";
+import { Shield, CheckCircle, AlertTriangle, FileText, Users, Lock, Globe, Loader2 } from "lucide-react";
+
+interface IMSPolicy {
+  commitment: string;
+  qualityObjectives: string[];
+  informationSecurity: string[];
+  healthSafety: string[];
+  compliance: string;
+  continuousImprovement: string[];
+}
+
+const defaultPolicy: IMSPolicy = {
+  commitment: "Hyves Technology Limited is committed to establishing, implementing, maintaining, and continually improving an Integrated Management System (IMS) that meets the requirements of ISO 9001:2015, ISO 27001:2022, and ISO 45001:2018. This policy demonstrates our dedication to quality, information security, and occupational health and safety.",
+  qualityObjectives: [
+    "Deliver products and services that consistently meet customer requirements and expectations",
+    "Enhance customer satisfaction through effective quality management processes",
+    "Continually improve the effectiveness of the Quality Management System",
+    "Ensure compliance with applicable legal and regulatory requirements"
+  ],
+  informationSecurity: [
+    "Protect the confidentiality, integrity, and availability of information assets",
+    "Implement robust cybersecurity measures to safeguard against threats",
+    "Conduct regular risk assessments and security audits",
+    "Provide ongoing security awareness training for all employees"
+  ],
+  healthSafety: [
+    "Provide a safe and healthy work environment for all employees and stakeholders",
+    "Identify and control workplace hazards to prevent injury and illness",
+    "Promote employee well-being through wellness programs and initiatives",
+    "Ensure compliance with occupational health and safety regulations"
+  ],
+  compliance: "Our Integrated Management System is certified to the following international standards:",
+  continuousImprovement: [
+    "Regular internal audits and management reviews",
+    "Monitoring and measurement of key performance indicators",
+    "Implementation of corrective and preventive actions",
+    "Engagement with stakeholders for feedback and improvement"
+  ]
+};
 
 export default function IMSPolicy() {
+  const [policy, setPolicy] = useState<IMSPolicy>(defaultPolicy);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/ims-policy")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.commitment) {
+          setPolicy(data);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching IMS Policy:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-hyves-bg min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-hyves-gold animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-hyves-bg min-h-screen">
       {/* Hero Section */}
@@ -56,7 +121,7 @@ export default function IMSPolicy() {
                 <div>
                   <h2 className="text-2xl font-bold text-hyves-black mb-4">Our Commitment</h2>
                   <p className="text-slate-600 leading-relaxed">
-                    Hyves Technology Limited is committed to establishing, implementing, maintaining, and continually improving an Integrated Management System (IMS) that meets the requirements of ISO 9001:2015, ISO 27001:2022, and ISO 45001:2018. This policy demonstrates our dedication to quality, information security, and occupational health and safety.
+                    {policy.commitment || defaultPolicy.commitment}
                   </p>
                 </div>
               </div>
@@ -75,12 +140,7 @@ export default function IMSPolicy() {
                 Quality Objectives
               </h2>
               <div className="space-y-4">
-                {[
-                  "Deliver products and services that consistently meet customer requirements and expectations",
-                  "Enhance customer satisfaction through effective quality management processes",
-                  "Continually improve the effectiveness of the Quality Management System",
-                  "Ensure compliance with applicable legal and regulatory requirements"
-                ].map((item, index) => (
+                {(policy.qualityObjectives?.length > 0 ? policy.qualityObjectives : defaultPolicy.qualityObjectives).map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <CheckCircle className="w-4 h-4 text-hyves-gold" />
@@ -104,12 +164,7 @@ export default function IMSPolicy() {
                 Information Security
               </h2>
               <div className="space-y-4">
-                {[
-                  "Protect the confidentiality, integrity, and availability of information assets",
-                  "Implement robust cybersecurity measures to safeguard against threats",
-                  "Conduct regular risk assessments and security audits",
-                  "Provide ongoing security awareness training for all employees"
-                ].map((item, index) => (
+                {(policy.informationSecurity?.length > 0 ? policy.informationSecurity : defaultPolicy.informationSecurity).map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Lock className="w-4 h-4 text-hyves-gold" />
@@ -133,12 +188,7 @@ export default function IMSPolicy() {
                 Occupational Health & Safety
               </h2>
               <div className="space-y-4">
-                {[
-                  "Provide a safe and healthy work environment for all employees and stakeholders",
-                  "Identify and control workplace hazards to prevent injury and illness",
-                  "Promote employee well-being through wellness programs and initiatives",
-                  "Ensure compliance with occupational health and safety regulations"
-                ].map((item, index) => (
+                {(policy.healthSafety?.length > 0 ? policy.healthSafety : defaultPolicy.healthSafety).map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Users className="w-4 h-4 text-hyves-gold" />
@@ -162,7 +212,7 @@ export default function IMSPolicy() {
                 Compliance & Certification
               </h2>
               <p className="text-slate-600 leading-relaxed mb-6">
-                Our Integrated Management System is certified to the following international standards:
+                {policy.compliance || defaultPolicy.compliance}
               </p>
               <div className="grid md:grid-cols-3 gap-4">
                 {[
@@ -197,12 +247,7 @@ export default function IMSPolicy() {
                 We are committed to the principle of continual improvement. This involves:
               </p>
               <div className="grid md:grid-cols-2 gap-4">
-                {[
-                  "Regular internal audits and management reviews",
-                  "Monitoring and measurement of key performance indicators",
-                  "Implementation of corrective and preventive actions",
-                  "Engagement with stakeholders for feedback and improvement"
-                ].map((item, index) => (
+                {(policy.continuousImprovement?.length > 0 ? policy.continuousImprovement : defaultPolicy.continuousImprovement).map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <CheckCircle className="w-4 h-4 text-hyves-gold" />

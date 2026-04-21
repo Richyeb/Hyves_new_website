@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 
 const BLOG_FILE = path.join(__dirname, "blog-posts.json");
 const ROLES_FILE = path.join(__dirname, "roles.json");
+const IMS_POLICY_FILE = path.join(__dirname, "ims-policy.json");
 
 async function ensureFiles() {
   try {
@@ -20,6 +21,18 @@ async function ensureFiles() {
     await fs.access(ROLES_FILE);
   } catch {
     await fs.writeFile(ROLES_FILE, JSON.stringify([]));
+  }
+  try {
+    await fs.access(IMS_POLICY_FILE);
+  } catch {
+    await fs.writeFile(IMS_POLICY_FILE, JSON.stringify({
+      commitment: "",
+      qualityObjectives: [],
+      informationSecurity: [],
+      healthSafety: [],
+      compliance: "",
+      continuousImprovement: []
+    }));
   }
 }
 
@@ -122,6 +135,26 @@ async function startServer() {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete role" });
+    }
+  });
+
+  // IMS Policy API
+  app.get("/api/ims-policy", async (req, res) => {
+    try {
+      const data = await fs.readFile(IMS_POLICY_FILE, "utf-8");
+      res.json(JSON.parse(data));
+    } catch (error) {
+      res.status(500).json({ error: "Failed to read IMS Policy" });
+    }
+  });
+
+  app.put("/api/ims-policy", async (req, res) => {
+    try {
+      const policyData = req.body;
+      await fs.writeFile(IMS_POLICY_FILE, JSON.stringify(policyData, null, 2));
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to save IMS Policy" });
     }
   });
 

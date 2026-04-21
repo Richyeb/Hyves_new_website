@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Trash2, Save, X, Image as ImageIcon, Briefcase, FileText } from "lucide-react";
+import { Plus, Trash2, Save, X, Image as ImageIcon, Briefcase, FileText, Shield, CheckCircle, Lock, Users, Globe, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AdminProtection from "@/components/AdminProtection";
 
@@ -24,10 +24,27 @@ interface Role {
   date: string;
 }
 
+interface IMSPolicy {
+  commitment: string;
+  qualityObjectives: string[];
+  informationSecurity: string[];
+  healthSafety: string[];
+  compliance: string;
+  continuousImprovement: string[];
+}
+
 export default function BlogAdmin() {
-  const [activeTab, setActiveTab] = useState<"posts" | "roles">("posts");
+  const [activeTab, setActiveTab] = useState<"posts" | "roles" | "ims">("posts");
   const [posts, setPosts] = useState<Post[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [imsPolicy, setImsPolicy] = useState<IMSPolicy>({
+    commitment: "",
+    qualityObjectives: [],
+    informationSecurity: [],
+    healthSafety: [],
+    compliance: "",
+    continuousImprovement: []
+  });
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -50,8 +67,10 @@ export default function BlogAdmin() {
   useEffect(() => {
     if (activeTab === "posts") {
       fetchPosts();
-    } else {
+    } else if (activeTab === "roles") {
       fetchRoles();
+    } else {
+      fetchImsPolicy();
     }
   }, [activeTab]);
 
@@ -83,6 +102,37 @@ export default function BlogAdmin() {
         console.error("Error fetching roles:", err);
         setLoading(false);
       });
+  };
+
+  const fetchImsPolicy = () => {
+    setLoading(true);
+    fetch("/api/ims-policy")
+      .then((res) => res.json())
+      .then((data) => {
+        setImsPolicy(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching IMS Policy:", err);
+        setLoading(false);
+      });
+  };
+
+  const handleImsPolicySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/ims-policy", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(imsPolicy)
+      });
+      if (res.ok) {
+        setIsAdding(false);
+        alert("IMS Policy saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving IMS Policy:", error);
+    }
   };
 
   const handlePostSubmit = async (e: React.FormEvent) => {
@@ -163,7 +213,15 @@ export default function BlogAdmin() {
               <Briefcase className="w-4 h-4" />
               Careers
             </button>
+            <button 
+              onClick={() => setActiveTab("ims")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "ims" ? "bg-hyves-black text-white" : "text-slate-500 hover:bg-slate-50"}`}
+            >
+              <Shield className="w-4 h-4" />
+              IMS Policy
+            </button>
           </div>
+          {activeTab !== "ims" && (
           <Button 
             onClick={() => setIsAdding(true)}
             className="bg-hyves-gold text-hyves-black font-bold rounded-full px-6 hover:bg-hyves-gold/90"
@@ -331,6 +389,118 @@ export default function BlogAdmin() {
                 </div>
               </form>
             )}
+          </motion.div>
+        )}
+
+        {/* IMS Policy Section */}
+        {activeTab === "ims" && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-3xl border border-slate-200 p-8"
+          >
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h2 className="text-xl font-bold text-hyves-black flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-hyves-gold" />
+                  IMS Policy Management
+                </h2>
+                <p className="text-slate-500 text-sm mt-1">Update the Integrated Management System Policy content</p>
+              </div>
+              <Button 
+                onClick={handleImsPolicySubmit}
+                className="bg-hyves-gold text-hyves-black font-bold rounded-full px-6 hover:bg-hyves-gold/90"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Save Changes
+              </Button>
+            </div>
+
+            <div className="space-y-8">
+              {/* Commitment */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-hyves-black flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-hyves-gold" />
+                  Our Commitment
+                </label>
+                <textarea 
+                  value={imsPolicy.commitment}
+                  onChange={(e) => setImsPolicy({ ...imsPolicy, commitment: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-32 resize-none"
+                  placeholder="Describe the company's commitment to quality, security, and safety..."
+                />
+              </div>
+
+              {/* Quality Objectives */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-hyves-black flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-hyves-gold" />
+                  Quality Objectives (one per line)
+                </label>
+                <textarea 
+                  value={imsPolicy.qualityObjectives.join("\n")}
+                  onChange={(e) => setImsPolicy({ ...imsPolicy, qualityObjectives: e.target.value.split("\n").filter(Boolean) })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-32 resize-none"
+                  placeholder="Enter each objective on a new line..."
+                />
+              </div>
+
+              {/* Information Security */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-hyves-black flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-hyves-gold" />
+                  Information Security (one per line)
+                </label>
+                <textarea 
+                  value={imsPolicy.informationSecurity.join("\n")}
+                  onChange={(e) => setImsPolicy({ ...imsPolicy, informationSecurity: e.target.value.split("\n").filter(Boolean) })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-32 resize-none"
+                  placeholder="Enter each point on a new line..."
+                />
+              </div>
+
+              {/* Health & Safety */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-hyves-black flex items-center gap-2">
+                  <Users className="w-4 h-4 text-hyves-gold" />
+                  Health & Safety (one per line)
+                </label>
+                <textarea 
+                  value={imsPolicy.healthSafety.join("\n")}
+                  onChange={(e) => setImsPolicy({ ...imsPolicy, healthSafety: e.target.value.split("\n").filter(Boolean) })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-32 resize-none"
+                  placeholder="Enter each point on a new line..."
+                />
+              </div>
+
+              {/* Compliance */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-hyves-black flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-hyves-gold" />
+                  Compliance & Certification
+                </label>
+                <textarea 
+                  value={imsPolicy.compliance}
+                  onChange={(e) => setImsPolicy({ ...imsPolicy, compliance: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-32 resize-none"
+                  placeholder="Describe compliance and certification details..."
+                />
+              </div>
+
+              {/* Continuous Improvement */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-hyves-black flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-hyves-gold" />
+                  Continuous Improvement (one per line)
+                </label>
+                <textarea 
+                  value={imsPolicy.continuousImprovement.join("\n")}
+                  onChange={(e) => setImsPolicy({ ...imsPolicy, continuousImprovement: e.target.value.split("\n").filter(Boolean) })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-32 resize-none"
+                  placeholder="Enter each point on a new line..."
+                />
+              </div>
+            </div>
           </motion.div>
         )}
 
