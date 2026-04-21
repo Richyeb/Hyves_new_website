@@ -2,142 +2,115 @@ import { motion } from "motion/react";
 
 export default function ProductHeroAnimation() {
   return (
-    <div className="relative w-full aspect-[16/10] rounded-2xl bg-gradient-to-br from-hyves-navy via-slate-800 to-hyves-navy overflow-hidden shadow-2xl">
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: '30px 30px'
-        }} />
+    <div className="relative w-full">
+      <div className="flex items-end justify-center gap-4">
+        {/* Laptop Screen */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative"
+        >
+          <div className="rounded-2xl border-8 border-slate-800 bg-slate-800 shadow-2xl overflow-hidden aspect-[16/10] w-72 lg:w-96">
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800">
+              {/* Animated Dashboard Content */}
+              <div className="p-3 h-full flex flex-col">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-red-500" />
+                  <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                  <div className="w-2 h-2 rounded-full bg-green-500" />
+                </div>
+                {/* Content */}
+                <div className="flex-1 grid grid-cols-3 gap-2">
+                  <motion.div 
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="bg-slate-600/50 rounded-lg"
+                  />
+                  <motion.div 
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                    className="bg-slate-600/50 rounded-lg"
+                  />
+                  <motion.div 
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
+                    className="bg-slate-600/50 rounded-lg"
+                  />
+                </div>
+                {/* Chart */}
+                <div className="mt-2 h-12 bg-slate-600/30 rounded-lg relative overflow-hidden">
+                  <motion.div 
+                    className="absolute bottom-0 left-0 right-0 bg-hyves-gold/40"
+                    animate={{ height: ["30%", "60%", "40%", "70%", "50%"] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Laptop Base */}
+          <div className="w-72 lg:w-96 h-3 bg-slate-700 rounded-b-lg mx-auto -mt-1" />
+          <div className="w-20 h-1 bg-slate-600 rounded-b-lg mx-auto" />
+        </motion.div>
+
+        {/* Phone Screen */}
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative -mb-8"
+        >
+          <div className="w-24 rounded-[2rem] border-8 border-slate-800 bg-slate-800 shadow-2xl overflow-hidden aspect-[9/19]">
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800">
+              {/* Phone Content */}
+              <div className="p-2 h-full flex flex-col">
+                {/* Header */}
+                <div className="h-4 bg-slate-600/50 rounded mb-2" />
+                {/* Cards */}
+                <div className="space-y-1">
+                  <motion.div 
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="h-6 bg-slate-600/50 rounded"
+                  />
+                  <motion.div 
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                    className="h-6 bg-slate-600/50 rounded"
+                  />
+                  <motion.div 
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                    className="h-6 bg-slate-600/50 rounded"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* Phone Notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-4 bg-slate-800 rounded-b-xl" />
+          </div>
+        </motion.div>
       </div>
 
-      {/* Central Animated Circle */}
+      {/* Floating Elements */}
       <motion.div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        animate={{ 
-          scale: [1, 1.1, 1],
-          rotate: [0, 180, 360]
-        }}
-        transition={{ 
-          duration: 20, 
-          repeat: Infinity, 
-          ease: "linear" 
-        }}
-      >
-        <div className="w-48 h-48 rounded-full border-2 border-hyves-gold/30" />
-      </motion.div>
-
-      {/* Inner Circle */}
-      <motion.div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-0 right-0 w-20 h-20 bg-hyves-gold/20 rounded-full blur-2xl"
         animate={{ 
           scale: [1, 1.2, 1],
-          rotate: [0, -180, -360]
-        }}
-        transition={{ 
-          duration: 15, 
-          repeat: Infinity, 
-          ease: "linear" 
-        }}
-      >
-        <div className="w-32 h-32 rounded-full border-2 border-hyves-gold/50" />
-      </motion.div>
-
-      {/* Center Icon */}
-      <motion.div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.8, 1, 0.8]
-        }}
-        transition={{ 
-          duration: 2, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
-      >
-        <div className="w-20 h-20 bg-hyves-gold/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-          <div className="w-10 h-10 bg-hyves-gold rounded-lg" />
-        </div>
-      </motion.div>
-
-      {/* Floating Particles */}
-      {[...Array(12)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-hyves-gold/60 rounded-full"
-          initial={{ 
-            x: Math.random() * 300 + 50, 
-            y: Math.random() * 200 + 50,
-            opacity: 0 
-          }}
-          animate={{ 
-            y: [null, Math.random() * -100 + 50],
-            opacity: [0, 0.8, 0]
-          }}
-          transition={{ 
-            duration: 4 + Math.random() * 3, 
-            repeat: Infinity,
-            delay: Math.random() * 3
-          }}
-          style={{
-            left: `${10 + Math.random() * 80}%`,
-            top: `${20 + Math.random() * 60}%`
-          }}
-        />
-      ))}
-
-      {/* Glowing Orbs */}
-      <motion.div 
-        className="absolute top-10 right-10 w-32 h-32 bg-hyves-gold/20 rounded-full blur-3xl"
-        animate={{ 
-          scale: [1, 1.5, 1],
-          opacity: [0.3, 0.6, 0.3]
+          opacity: [0.3, 0.5, 0.3]
         }}
         transition={{ duration: 4, repeat: Infinity }}
       />
       <motion.div 
-        className="absolute bottom-10 left-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl"
+        className="absolute bottom-0 left-0 w-16 h-16 bg-blue-500/20 rounded-full blur-2xl"
         animate={{ 
           scale: [1, 1.3, 1],
-          opacity: [0.2, 0.5, 0.2]
+          opacity: [0.2, 0.4, 0.2]
         }}
         transition={{ duration: 5, repeat: Infinity }}
       />
-
-      {/* Data Flow Lines */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none">
-        <motion.path
-          d="M 0 50 Q 150 100 300 50 T 600 50"
-          fill="none"
-          stroke="rgba(249, 181, 9, 0.2)"
-          strokeWidth="2"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.path
-          d="M 0 150 Q 150 200 300 150 T 600 150"
-          fill="none"
-          stroke="rgba(249, 181, 9, 0.15)"
-          strokeWidth="2"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <motion.path
-          d="M 0 250 Q 150 300 300 250 T 600 250"
-          fill="none"
-          stroke="rgba(249, 181, 9, 0.1)"
-          strokeWidth="2"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-      </svg>
     </div>
   );
 }

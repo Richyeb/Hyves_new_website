@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Shield, CheckCircle, AlertTriangle, FileText, Users, Lock, Globe, Loader2 } from "lucide-react";
+import { Shield, Loader2 } from "lucide-react";
 
 interface IMSPolicy {
   commitment: string;
@@ -31,7 +31,7 @@ const defaultPolicy: IMSPolicy = {
     "Promote employee well-being through wellness programs and initiatives",
     "Ensure compliance with occupational health and safety regulations"
   ],
-  compliance: "Our Integrated Management System is certified to the following international standards:",
+  compliance: "Our Integrated Management System is certified to the following international standards: ISO 9001:2015 (Quality Management), ISO 27001:2022 (Information Security), and ISO 45001:2018 (Occupational Health & Safety).",
   continuousImprovement: [
     "Regular internal audits and management reviews",
     "Monitoring and measurement of key performance indicators",
@@ -67,10 +67,19 @@ export default function IMSPolicy() {
     );
   }
 
+  const allContent = [
+    { title: "Our Commitment", content: policy.commitment || defaultPolicy.commitment },
+    { title: "Quality Objectives", content: (policy.qualityObjectives?.length > 0 ? policy.qualityObjectives : defaultPolicy.qualityObjectives).join(" • ") },
+    { title: "Information Security", content: (policy.informationSecurity?.length > 0 ? policy.informationSecurity : defaultPolicy.informationSecurity).join(" • ") },
+    { title: "Health & Safety", content: (policy.healthSafety?.length > 0 ? policy.healthSafety : defaultPolicy.healthSafety).join(" • ") },
+    { title: "Compliance", content: policy.compliance || defaultPolicy.compliance },
+    { title: "Continuous Improvement", content: (policy.continuousImprovement?.length > 0 ? policy.continuousImprovement : defaultPolicy.continuousImprovement).join(" • ") }
+  ];
+
   return (
     <div className="bg-hyves-bg min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 bg-gradient-to-br from-hyves-navy via-slate-900 to-hyves-navy relative overflow-hidden">
+      <section className="pt-32 pb-16 lg:pt-40 lg:pb-20 bg-gradient-to-br from-hyves-navy via-slate-900 to-hyves-navy relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -103,161 +112,26 @@ export default function IMSPolicy() {
         </div>
       </section>
 
-      {/* Content Section */}
-      <section className="py-20">
+      {/* Single Statement Content Section */}
+      <section className="py-16">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            {/* Introduction */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8 border-l-4 border-hyves-gold"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-hyves-gold/10 rounded-xl flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-hyves-gold" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-hyves-black mb-4">Our Commitment</h2>
-                  <p className="text-slate-600 leading-relaxed">
-                    {policy.commitment || defaultPolicy.commitment}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Quality Objectives */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8"
-            >
-              <h2 className="text-2xl font-bold text-hyves-black mb-6 flex items-center gap-3">
-                <CheckCircle className="w-7 h-7 text-hyves-gold" />
-                Quality Objectives
-              </h2>
-              <div className="space-y-4">
-                {(policy.qualityObjectives?.length > 0 ? policy.qualityObjectives : defaultPolicy.qualityObjectives).map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <CheckCircle className="w-4 h-4 text-hyves-gold" />
-                    </div>
-                    <p className="text-slate-600">{item}</p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+              <div className="space-y-8">
+                {allContent.map((item, index) => (
+                  <div key={index} className={index === allContent.length - 1 ? "" : "pb-6 border-b border-slate-100"}>
+                    <h3 className="text-lg font-bold text-hyves-gold mb-2">{item.title}</h3>
+                    <p className="text-slate-600 leading-relaxed">{item.content}</p>
                   </div>
                 ))}
               </div>
-            </motion.div>
-
-            {/* Information Security */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8"
-            >
-              <h2 className="text-2xl font-bold text-hyves-black mb-6 flex items-center gap-3">
-                <Lock className="w-7 h-7 text-hyves-gold" />
-                Information Security
-              </h2>
-              <div className="space-y-4">
-                {(policy.informationSecurity?.length > 0 ? policy.informationSecurity : defaultPolicy.informationSecurity).map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Lock className="w-4 h-4 text-hyves-gold" />
-                    </div>
-                    <p className="text-slate-600">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Health & Safety */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8"
-            >
-              <h2 className="text-2xl font-bold text-hyves-black mb-6 flex items-center gap-3">
-                <Users className="w-7 h-7 text-hyves-gold" />
-                Occupational Health & Safety
-              </h2>
-              <div className="space-y-4">
-                {(policy.healthSafety?.length > 0 ? policy.healthSafety : defaultPolicy.healthSafety).map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Users className="w-4 h-4 text-hyves-gold" />
-                    </div>
-                    <p className="text-slate-600">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Compliance */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8"
-            >
-              <h2 className="text-2xl font-bold text-hyves-black mb-6 flex items-center gap-3">
-                <Globe className="w-7 h-7 text-hyves-gold" />
-                Compliance & Certification
-              </h2>
-              <p className="text-slate-600 leading-relaxed mb-6">
-                {policy.compliance || defaultPolicy.compliance}
-              </p>
-              <div className="grid md:grid-cols-3 gap-4">
-                {[
-                  { title: "ISO 9001:2015", desc: "Quality Management" },
-                  { title: "ISO 27001:2022", desc: "Information Security" },
-                  { title: "ISO 45001:2018", desc: "Occupational Health & Safety" }
-                ].map((cert, index) => (
-                  <div key={index} className="bg-hyves-bg rounded-xl p-6 text-center">
-                    <div className="w-12 h-12 bg-hyves-gold/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                      <Shield className="w-6 h-6 text-hyves-gold" />
-                    </div>
-                    <h3 className="font-bold text-hyves-black">{cert.title}</h3>
-                    <p className="text-sm text-slate-500">{cert.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Continuous Improvement */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="bg-gradient-to-br from-hyves-navy to-slate-900 rounded-2xl shadow-lg p-8 md:p-12"
-            >
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <AlertTriangle className="w-7 h-7 text-hyves-gold" />
-                Continuous Improvement
-              </h2>
-              <p className="text-slate-300 leading-relaxed mb-6">
-                We are committed to the principle of continual improvement. This involves:
-              </p>
-              <div className="grid md:grid-cols-2 gap-4">
-                {(policy.continuousImprovement?.length > 0 ? policy.continuousImprovement : defaultPolicy.continuousImprovement).map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-hyves-gold/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <CheckCircle className="w-4 h-4 text-hyves-gold" />
-                    </div>
-                    <p className="text-slate-300">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
