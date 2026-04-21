@@ -31,40 +31,7 @@ export default function Product() {
               </div>
             </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="lg:w-1/2 relative"
-            >
-              {/* Laptop Mockup */}
-              <div className="relative z-10 rounded-2xl border-8 border-slate-800 bg-slate-800 shadow-2xl overflow-hidden aspect-[16/10]">
-                <img 
-                  src="/product-laptop.svg" 
-                  alt="Hyves Dashboard on Laptop" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              
-              {/* Mobile Mockup */}
-              <motion.div 
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="absolute -bottom-10 -left-10 z-20 w-1/3 rounded-[2.5rem] border-8 border-slate-800 bg-slate-800 shadow-2xl overflow-hidden aspect-[9/19]"
-              >
-                <img 
-                  src="/product-mobile.svg" 
-                  alt="Hyves Mobile App" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </motion.div>
-
-              {/* Decorative elements */}
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-hyves-gold/10 rounded-full blur-3xl -z-10" />
-            </motion.div>
+            <div className="lg:w-1/2 relative min-h-[300px]" />
           </div>
         </div>
       </section>
