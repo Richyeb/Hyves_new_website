@@ -417,90 +417,16 @@ export default function BlogAdmin() {
               </Button>
             </div>
 
-            <div className="space-y-6">
-              {/* Our Commitment */}
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-hyves-gold" />
-                  Our Commitment
-                </label>
-                <textarea 
-                  value={imsPolicy.commitment}
-                  onChange={(e) => setImsPolicy({ ...imsPolicy, commitment: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-24 resize-none text-base"
-                  placeholder="Describe the company's commitment to quality, security, and safety..."
-                />
-              </div>
-
-              {/* Quality Objectives */}
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-hyves-gold" />
-                  Quality Objectives
-                </label>
-                <textarea 
-                  value={imsPolicy.qualityObjectives.join("\n")}
-                  onChange={(e) => setImsPolicy({ ...imsPolicy, qualityObjectives: e.target.value.split("\n").filter(Boolean) })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-24 resize-none text-base"
-                  placeholder="Enter each objective on a new line..."
-                />
-              </div>
-
-              {/* Information Security */}
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black flex items-center gap-2">
-                  <Lock className="w-5 h-5 text-hyves-gold" />
-                  Information Security
-                </label>
-                <textarea 
-                  value={imsPolicy.informationSecurity.join("\n")}
-                  onChange={(e) => setImsPolicy({ ...imsPolicy, informationSecurity: e.target.value.split("\n").filter(Boolean) })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-24 resize-none text-base"
-                  placeholder="Enter each point on a new line..."
-                />
-              </div>
-
-              {/* Health & Safety */}
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black flex items-center gap-2">
-                  <Users className="w-5 h-5 text-hyves-gold" />
-                  Health & Safety
-                </label>
-                <textarea 
-                  value={imsPolicy.healthSafety.join("\n")}
-                  onChange={(e) => setImsPolicy({ ...imsPolicy, healthSafety: e.target.value.split("\n").filter(Boolean) })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-24 resize-none text-base"
-                  placeholder="Enter each point on a new line..."
-                />
-              </div>
-
-              {/* Compliance */}
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-hyves-gold" />
-                  Compliance & Certification
-                </label>
-                <textarea 
-                  value={imsPolicy.compliance}
-                  onChange={(e) => setImsPolicy({ ...imsPolicy, compliance: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-24 resize-none text-base"
-                  placeholder="Describe compliance and certification details..."
-                />
-              </div>
-
-              {/* Continuous Improvement */}
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-hyves-gold" />
-                  Continuous Improvement
-                </label>
-                <textarea 
-                  value={imsPolicy.continuousImprovement.join("\n")}
-                  onChange={(e) => setImsPolicy({ ...imsPolicy, continuousImprovement: e.target.value.split("\n").filter(Boolean) })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-24 resize-none text-base"
-                  placeholder="Enter each point on a new line..."
-                />
-              </div>
+            <div className="space-y-2">
+              <label className="text-lg font-bold text-hyves-black">
+                IMS Policy Content
+              </label>
+              <textarea 
+                value={imsPolicy.commitment}
+                onChange={(e) => setImsPolicy({ ...imsPolicy, commitment: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-96 resize-none text-base"
+                placeholder="Enter the full IMS Policy content here..."
+              />
             </div>
           </motion.div>
         )}

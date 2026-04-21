@@ -67,49 +67,30 @@ export default function IMSPolicy() {
     );
   }
 
-  const allContent = [
-    { title: "Our Commitment", content: policy.commitment || defaultPolicy.commitment },
-    { title: "Quality Objectives", content: (policy.qualityObjectives?.length > 0 ? policy.qualityObjectives : defaultPolicy.qualityObjectives).join(" • ") },
-    { title: "Information Security", content: (policy.informationSecurity?.length > 0 ? policy.informationSecurity : defaultPolicy.informationSecurity).join(" • ") },
-    { title: "Health & Safety", content: (policy.healthSafety?.length > 0 ? policy.healthSafety : defaultPolicy.healthSafety).join(" • ") },
-    { title: "Compliance", content: policy.compliance || defaultPolicy.compliance },
-    { title: "Continuous Improvement", content: (policy.continuousImprovement?.length > 0 ? policy.continuousImprovement : defaultPolicy.continuousImprovement).join(" • ") }
-  ];
+  const allContent = policy.commitment || defaultPolicy.commitment;
 
   return (
     <div className="bg-hyves-bg min-h-screen">
       {/* Hero Section */}
-      <section className="pt-24 pb-12 lg:pt-28 lg:pb-16 bg-gradient-to-br from-slate-600 via-slate-700 to-slate-600 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-            backgroundSize: '32px 32px'
-          }} />
-        </div>
-        
-        {/* Decorative Elements */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-hyves-gold/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
-
+      <section className="pt-24 pb-12 lg:pt-28 lg:pb-16 relative overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl mx-auto text-center"
           >
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-hyves-black mb-4 leading-tight">
               Integrated Management System <span className="text-hyves-gold">Policy</span>
             </h1>
-            <p className="text-base text-slate-200 max-w-2xl mx-auto">
+            <p className="text-base text-slate-600 max-w-2xl mx-auto">
               Our commitment to quality, safety, and excellence in everything we do.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Single Statement Content Section */}
-      <section className="py-16">
+      {/* Content Section */}
+      <section className="py-16 bg-gradient-to-br from-slate-600 via-slate-700 to-slate-600">
         <div className="container mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -118,14 +99,7 @@ export default function IMSPolicy() {
             className="max-w-4xl mx-auto"
           >
             <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
-              <div className="space-y-8">
-                {allContent.map((item, index) => (
-                  <div key={index} className={index === allContent.length - 1 ? "" : "pb-6 border-b border-slate-100"}>
-                    <h3 className="text-lg font-bold text-hyves-gold mb-2">{item.title}</h3>
-                    <p className="text-slate-600 leading-relaxed">{item.content}</p>
-                  </div>
-                ))}
-              </div>
+              <p className="text-slate-600 leading-relaxed text-lg">{allContent}</p>
             </div>
           </motion.div>
         </div>
