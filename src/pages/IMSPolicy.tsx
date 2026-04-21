@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Shield, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface IMSPolicy {
   commitment: string;
@@ -79,7 +79,7 @@ export default function IMSPolicy() {
   return (
     <div className="bg-hyves-bg min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 lg:pt-40 lg:pb-20 bg-gradient-to-br from-hyves-navy via-slate-900 to-hyves-navy relative overflow-hidden">
+      <section className="pt-24 pb-12 lg:pt-28 lg:pb-16 bg-gradient-to-br from-slate-600 via-slate-700 to-slate-600 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -98,14 +98,10 @@ export default function IMSPolicy() {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl mx-auto text-center"
           >
-            <div className="inline-flex items-center gap-2 bg-hyves-gold/20 text-hyves-gold px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              <Shield className="w-4 h-4" />
-              Quality & Safety
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
               Integrated Management System <span className="text-hyves-gold">Policy</span>
             </h1>
-            <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+            <p className="text-base text-slate-200 max-w-2xl mx-auto">
               Our commitment to quality, safety, and excellence in everything we do.
             </p>
           </motion.div>
