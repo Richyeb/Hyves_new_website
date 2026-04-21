@@ -222,13 +222,14 @@ export default function BlogAdmin() {
             </button>
           </div>
           {activeTab !== "ims" && (
-          <Button 
-            onClick={() => setIsAdding(true)}
-            className="bg-hyves-gold text-hyves-black font-bold rounded-full px-6 hover:bg-hyves-gold/90"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            {activeTab === "posts" ? "New Post" : "New Role"}
-          </Button>
+            <Button 
+              onClick={() => setIsAdding(true)}
+              className="bg-hyves-gold text-hyves-black font-bold rounded-full px-6 hover:bg-hyves-gold/90"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {activeTab === "posts" ? "New Post" : "New Role"}
+            </Button>
+          )}
         </div>
 
         {isAdding && (
