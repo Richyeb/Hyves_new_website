@@ -76,7 +76,7 @@ export default function Features() {
               Powerful Features for <span className="text-hyves-gold">Growth.</span>
             </h2>
             <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-              Everything you need to run a high-performing cooperative, built with the latest financial technology.
+              Everything you need to run a high-performing Cooperative, built with the latest financial technology.
             </p>
           </motion.div>
         </div>

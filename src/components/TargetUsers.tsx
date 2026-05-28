@@ -5,12 +5,12 @@ const targets = [
   {
     icon: Building2,
     title: "Registered Cooperatives",
-    description: "Traditional cooperatives looking to modernize their operations and improve member trust."
+    description: "Traditional Cooperatives looking to modernize their operations and improve member trust."
   },
   {
     icon: Briefcase,
     title: "Corporate Cooperatives",
-    description: "Staff cooperatives within organizations that need efficient payroll deduction and loan management."
+    description: "Staff Cooperatives within organizations that need efficient payroll deduction and loan management."
   },
   {
     icon: Users,
@@ -24,8 +24,8 @@ const targets = [
   },
   {
     icon: Sprout,
-    title: "Agri-based Cooperatives",
-    description: "Agricultural cooperatives managing member inputs, contributions, and collective marketing."
+    title: "Agri-Based Cooperatives",
+    description: "Agricultural Cooperatives managing member inputs, contributions, and collective marketing."
   }
 ];
 
@@ -38,7 +38,7 @@ export default function TargetUsers() {
             Built for Every Type of Cooperative
           </h2>
           <p className="text-lg text-slate-600">
-            Whether you are a small community group or a large corporate cooperative, Hyves scales with you.
+            Whether you are a small community group or a large corporate Cooperative, Hyves scales with you.
           </p>
         </div>
 

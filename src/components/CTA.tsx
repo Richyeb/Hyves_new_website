@@ -22,7 +22,7 @@ export default function CTA() {
                 Cooperative Today.
               </h2>
               <p className="text-lg text-slate-300 mb-12 max-w-xl mx-auto">
-                Join thousands of cooperatives across Nigeria that are already using Hyves to power their digital transformation.
+                Join thousands of Cooperatives across Nigeria that are already using Hyves to power their digital transformation.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

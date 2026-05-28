@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Youtube } from "lucide-react";
+import { Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 
@@ -13,17 +13,14 @@ export default function Footer() {
               The end-to-end ERP system powering digital transformation for modern Cooperatives in Nigeria.
             </p>
             <div className="flex gap-4 mb-8">
-              <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-hyves-gold hover:border-hyves-gold transition-all">
+              <a href="https://x.com/hyves_africa" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-hyves-gold hover:border-hyves-gold transition-all">
                 <Twitter className="w-4 h-4" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-hyves-gold hover:border-hyves-gold transition-all">
+              <a href="https://www.linkedin.com/company/hyvesng/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-hyves-gold hover:border-hyves-gold transition-all">
                 <Linkedin className="w-4 h-4" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-hyves-gold hover:border-hyves-gold transition-all">
+              <a href="https://www.instagram.com/hyvesafrica/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-hyves-gold hover:border-hyves-gold transition-all">
                 <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-hyves-gold hover:border-hyves-gold transition-all">
-                <Youtube className="w-4 h-4" />
               </a>
             </div>
 

@@ -50,8 +50,8 @@ export default function Hero() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-hyves-black mb-6 leading-[1.1]">
-              Digitize Your Cooperative, <br />
-              <span className="text-hyves-gold">Empower Your Members.</span>
+              Digitize Your Cooperative <br />
+              <span className="text-hyves-gold">Empower Your Members</span>
             </h1>
           </motion.div>
 
