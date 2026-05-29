@@ -82,8 +82,11 @@ export default function BlogAdmin() {
     } else if (activeTab === "roles") {
       fetchRoles();
     } else {
-      fetchImsPolicy();
-      fetchWhistleblowerPolicy();
+      // Fetch both policies and only set loading to false when both are done
+      setLoading(true);
+      Promise.all([fetchImsPolicy(), fetchWhistleblowerPolicy()]).finally(() => {
+        setLoading(false);
+      });
     }
   }, [activeTab]);
 
@@ -124,35 +127,33 @@ export default function BlogAdmin() {
       });
   };
 
-  const fetchImsPolicy = () => {
-    setLoading(true);
-    fetch("/api/ims-policy")
-      .then((res) => res.json())
-      .then((data) => {
-        setImsPolicy(data);
-        setOriginalImsPolicy(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching IMS Policy:", err);
-        setLoading(false);
-      });
+  const fetchImsPolicy = async () => {
+    try {
+      const res = await fetch("/api/ims-policy");
+      if (!res.ok) throw new Error(`IMS Policy: ${res.status}`);
+      const data = await res.json();
+      setImsPolicy(data);
+      setOriginalImsPolicy(data);
+      return true;
+    } catch (err) {
+      console.error("Error fetching IMS Policy:", err);
+      return false;
+    }
   };
 
-  const fetchWhistleblowerPolicy = () => {
-    setLoading(true);
-    fetch("/api/whistleblower-policy")
-      .then((res) => res.json())
-      .then((data) => {
-        const content = data?.content || "";
-        setWhistleblowerPolicy(content);
-        setOriginalWhistleblowerPolicy(content);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching Whistleblower Policy:", err);
-        setLoading(false);
-      });
+  const fetchWhistleblowerPolicy = async () => {
+    try {
+      const res = await fetch("/api/whistleblower-policy");
+      if (!res.ok) throw new Error(`Whistleblower Policy: ${res.status}`);
+      const data = await res.json();
+      const content = data?.content || "";
+      setWhistleblowerPolicy(content);
+      setOriginalWhistleblowerPolicy(content);
+      return true;
+    } catch (err) {
+      console.error("Error fetching Whistleblower Policy:", err);
+      return false;
+    }
   };
 
   const handlePolicySubmit = async (e: React.FormEvent) => {
@@ -469,17 +470,21 @@ export default function BlogAdmin() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-3xl border border-slate-200 p-8"
           >
-            <div className="flex justify-between items-center mb-8">
-              <div>
-                <h2 className="text-xl font-bold text-hyves-black flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-hyves-gold" />
-                  Policy Management
-                </h2>
-                <p className="text-slate-500 text-sm mt-1">Edit all deployed policies and deploy changes to the public policy page.</p>
-              </div>
-            </div>
+            {loading ? (
+              <div className="p-12 text-center text-slate-400">Loading policies...</div>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <h2 className="text-xl font-bold text-hyves-black flex items-center gap-2">
+                      <Shield className="w-5 h-5 text-hyves-gold" />
+                      Policy Management
+                    </h2>
+                    <p className="text-slate-500 text-sm mt-1">Edit all deployed policies and deploy changes to the public policy page.</p>
+                  </div>
+                </div>
 
-            <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+                <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
                 <h3 className="text-sm font-bold text-hyves-black uppercase tracking-[0.24em] mb-4">Policies</h3>
                 <div className="space-y-3">
@@ -610,6 +615,8 @@ export default function BlogAdmin() {
                 </form>
               </div>
             </div>
+              </>
+            )}
           </motion.div>
         )}
 
