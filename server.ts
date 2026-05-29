@@ -159,10 +159,16 @@ async function startServer() {
   app.put("/api/ims-policy", async (req, res) => {
     try {
       const policyData = req.body;
+      if (!policyData || typeof policyData !== "object") {
+        return res.status(400).json({ error: "Invalid IMS policy payload" });
+      }
+      // ensure directory exists (defensive)
+      await fs.mkdir(path.dirname(IMS_POLICY_FILE), { recursive: true }).catch(() => {});
       await fs.writeFile(IMS_POLICY_FILE, JSON.stringify(policyData, null, 2));
       res.json({ success: true });
     } catch (error) {
-      res.status(500).json({ error: "Failed to save IMS Policy" });
+      console.error("Error saving IMS policy:", error);
+      res.status(500).json({ error: "Failed to save IMS Policy", detail: String(error) });
     }
   });
 
@@ -178,10 +184,15 @@ async function startServer() {
   app.put("/api/whistleblower-policy", async (req, res) => {
     try {
       const policyData = req.body;
+      if (!policyData || typeof policyData !== "object" || typeof policyData.content !== "string") {
+        return res.status(400).json({ error: "Invalid whistleblower payload" });
+      }
+      await fs.mkdir(path.dirname(WHISTLEBLOWER_POLICY_FILE), { recursive: true }).catch(() => {});
       await fs.writeFile(WHISTLEBLOWER_POLICY_FILE, JSON.stringify(policyData, null, 2));
       res.json({ success: true });
     } catch (error) {
-      res.status(500).json({ error: "Failed to save Whistleblower Policy" });
+      console.error("Error saving Whistleblower policy:", error);
+      res.status(500).json({ error: "Failed to save Whistleblower Policy", detail: String(error) });
     }
   });
 
