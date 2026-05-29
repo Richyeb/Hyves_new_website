@@ -80,31 +80,50 @@ export default function Policies() {
     }
   }, [location.hash]);
 
-  useEffect(() => {
+  const fetchPolicies = async () => {
     setLoading(true);
-    const fetchPolicies = async () => {
-      try {
-        const [imsRes, wbRes] = await Promise.all([
-          fetch("/api/ims-policy"),
-          fetch("/api/whistleblower-policy")
-        ]);
-        const imsData = imsRes.ok ? await imsRes.json() : null;
-        const wbData = wbRes.ok ? await wbRes.json() : null;
+    try {
+      const [imsRes, wbRes] = await Promise.all([
+        fetch("/api/ims-policy"),
+        fetch("/api/whistleblower-policy")
+      ]);
+      const imsData = imsRes.ok ? await imsRes.json() : null;
+      const wbData = wbRes.ok ? await wbRes.json() : null;
 
-        if (imsData && imsData.commitment) {
-          setImsPolicy(imsData);
-        }
-        if (wbData?.content) {
-          setWhistleblowerContent(wbData.content);
-        }
-      } catch (error) {
-        console.error("Error loading policies:", error);
-      } finally {
-        setLoading(false);
+      if (imsData && imsData.commitment) {
+        setImsPolicy(imsData);
       }
-    };
+      if (wbData?.content) {
+        setWhistleblowerContent(wbData.content);
+      }
+    } catch (error) {
+      console.error("Error loading policies:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchPolicies();
+
+    // Listen for updates from admin via BroadcastChannel
+    let bc: BroadcastChannel | null = null;
+    try {
+      if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+        bc = new BroadcastChannel("policies");
+        bc.onmessage = (ev) => {
+          if (ev.data?.type === "updated") {
+            fetchPolicies();
+          }
+        };
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    return () => {
+      if (bc) bc.close();
+    };
   }, []);
 
   const activePolicy = useMemo(() => {

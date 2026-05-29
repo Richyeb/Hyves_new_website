@@ -58,6 +58,7 @@ export default function BlogAdmin() {
   const [originalWhistleblowerPolicy, setOriginalWhistleblowerPolicy] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState<null | { type: "success" | "error"; message: string }>(null);
   
   const [postFormData, setPostFormData] = useState({
     title: "",
@@ -85,6 +86,13 @@ export default function BlogAdmin() {
       fetchWhistleblowerPolicy();
     }
   }, [activeTab]);
+
+  // Auto-dismiss notification
+  useEffect(() => {
+    if (!notification) return;
+    const t = setTimeout(() => setNotification(null), 4000);
+    return () => clearTimeout(t);
+  }, [notification]);
 
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; type: "post" | "role" } | null>(null);
 
@@ -155,22 +163,40 @@ export default function BlogAdmin() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(imsPolicy)
       });
-
       const whistleblowerResponse = await fetch("/api/whistleblower-policy", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: whistleblowerPolicy })
       });
 
+      // Collect response bodies for better error reporting
+      const imsBody = imsResponse.ok ? await imsResponse.json().catch(() => ({})) : await imsResponse.text().catch(() => "");
+      const wbBody = whistleblowerResponse.ok ? await whistleblowerResponse.json().catch(() => ({})) : await whistleblowerResponse.text().catch(() => "");
+
       if (imsResponse.ok && whistleblowerResponse.ok) {
         setOriginalImsPolicy(imsPolicy);
         setOriginalWhistleblowerPolicy(whistleblowerPolicy);
-        alert("Policies saved successfully!");
+        setNotification({ type: "success", message: "Policies saved successfully." });
+        try {
+          if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+            const bc = new BroadcastChannel("policies");
+            bc.postMessage({ type: "updated" });
+            bc.close();
+          }
+        } catch (e) {
+          // ignore
+        }
       } else {
-        console.error("Failed to save one or more policies", imsResponse, whistleblowerResponse);
+        const parts: string[] = [];
+        if (!imsResponse.ok) parts.push(`IMS: ${typeof imsBody === "string" ? imsBody : JSON.stringify(imsBody)}`);
+        if (!whistleblowerResponse.ok) parts.push(`Whistleblower: ${typeof wbBody === "string" ? wbBody : JSON.stringify(wbBody)}`);
+        const message = `Failed to save policies. ${parts.join(" | ")}`;
+        console.error(message, imsResponse, whistleblowerResponse);
+        setNotification({ type: "error", message });
       }
     } catch (error) {
       console.error("Error saving policies:", error);
+      setNotification({ type: "error", message: String(error) });
     }
   };
 
@@ -697,6 +723,22 @@ export default function BlogAdmin() {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            className={`fixed right-6 bottom-6 z-[200] max-w-sm w-full rounded-xl shadow-xl p-4 text-sm ${notification.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-rose-50 border border-rose-200 text-rose-800'}`}
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex-1">{notification.message}</div>
+              <button className="opacity-70 hover:opacity-100" onClick={() => setNotification(null)}>Dismiss</button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
