@@ -1,0 +1,273 @@
+import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
+import { Loader2, Shield, AlertTriangle, Lock } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
+
+interface IMSPolicy {
+  commitment: string;
+  qualityObjectives: string[];
+  informationSecurity: string[];
+  healthSafety: string[];
+  compliance: string;
+  continuousImprovement: string[];
+}
+
+const defaultPolicy: IMSPolicy = {
+  commitment: "Hyves Technology Limited is committed to establishing, implementing, maintaining, and continually improving an Integrated Management System (IMS) that meets the requirements of ISO 9001:2015, ISO 27001:2022, and ISO 45001:2018. This policy demonstrates our dedication to quality, information security, and occupational health and safety.",
+  qualityObjectives: [
+    "Deliver products and services that consistently meet customer requirements and expectations.",
+    "Enhance customer satisfaction through effective quality management processes.",
+    "Continually improve the effectiveness of the Quality Management System.",
+    "Ensure compliance with applicable legal and regulatory requirements."
+  ],
+  informationSecurity: [
+    "Protect the confidentiality, integrity, and availability of information assets.",
+    "Implement robust cybersecurity measures to safeguard against threats.",
+    "Conduct regular risk assessments and security audits.",
+    "Provide ongoing security awareness training for all employees."
+  ],
+  healthSafety: [
+    "Provide a safe and healthy work environment for all employees and stakeholders.",
+    "Identify and control workplace hazards to prevent injury and illness.",
+    "Promote employee well-being through wellness programs and initiatives.",
+    "Ensure compliance with occupational health and safety regulations."
+  ],
+  compliance: "Our Integrated Management System is certified to the following international standards: ISO 9001:2015 (Quality Management), ISO 27001:2022 (Information Security), and ISO 45001:2018 (Occupational Health & Safety).",
+  continuousImprovement: [
+    "Regular internal audits and management reviews.",
+    "Monitoring and measurement of key performance indicators.",
+    "Implementation of corrective and preventive actions.",
+    "Engagement with stakeholders for feedback and improvement."
+  ]
+};
+
+const defaultWhistleblower = {
+  content: "Hyves Technology Limited is committed to providing a safe, confidential, and anonymous whistleblowing channel for reporting misconduct, unethical behavior, or non-compliance. All reports will be taken seriously, investigated promptly, and handled without retaliation.",
+};
+
+const policies = [
+  {
+    id: "ims",
+    title: "IMS Policy",
+    description: "Integrated Management System policy for quality, security, and safety.",
+    icon: Shield,
+  },
+  {
+    id: "whistleblower",
+    title: "Whistleblower Policy",
+    description: "How to report concerns confidentially and without fear of retaliation.",
+    icon: AlertTriangle,
+  },
+  {
+    id: "information-security",
+    title: "Information Security Policy",
+    description: "Protecting the confidentiality, integrity, and availability of information assets.",
+    icon: Lock,
+  }
+];
+
+export default function Policies() {
+  const location = useLocation();
+  const [selectedPolicy, setSelectedPolicy] = useState("ims");
+  const [imsPolicy, setImsPolicy] = useState<IMSPolicy>(defaultPolicy);
+  const [whistleblowerContent, setWhistleblowerContent] = useState(defaultWhistleblower.content);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const hash = location.hash.replace("#", "");
+    if (hash && policies.some((policy) => policy.id === hash)) {
+      setSelectedPolicy(hash);
+    }
+  }, [location.hash]);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchPolicies = async () => {
+      try {
+        const [imsRes, wbRes] = await Promise.all([
+          fetch("/api/ims-policy"),
+          fetch("/api/whistleblower-policy")
+        ]);
+        const imsData = imsRes.ok ? await imsRes.json() : null;
+        const wbData = wbRes.ok ? await wbRes.json() : null;
+
+        if (imsData && imsData.commitment) {
+          setImsPolicy(imsData);
+        }
+        if (wbData?.content) {
+          setWhistleblowerContent(wbData.content);
+        }
+      } catch (error) {
+        console.error("Error loading policies:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPolicies();
+  }, []);
+
+  const activePolicy = useMemo(() => {
+    return policies.find((policy) => policy.id === selectedPolicy) || policies[0];
+  }, [selectedPolicy]);
+
+  const renderContent = () => {
+    if (activePolicy.id === "ims") {
+      return (
+        <> 
+          <p className="text-slate-600 leading-relaxed mb-6">{imsPolicy.commitment || defaultPolicy.commitment}</p>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="bg-slate-50 rounded-3xl p-6">
+              <h3 className="font-semibold text-hyves-black mb-4">Quality Objectives</h3>
+              <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                {(imsPolicy.qualityObjectives.length > 0 ? imsPolicy.qualityObjectives : defaultPolicy.qualityObjectives).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-slate-50 rounded-3xl p-6">
+              <h3 className="font-semibold text-hyves-black mb-4">Information Security</h3>
+              <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                {(imsPolicy.informationSecurity.length > 0 ? imsPolicy.informationSecurity : defaultPolicy.informationSecurity).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="grid gap-8 md:grid-cols-2 mt-8">
+            <div className="bg-slate-50 rounded-3xl p-6">
+              <h3 className="font-semibold text-hyves-black mb-4">Health & Safety</h3>
+              <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                {(imsPolicy.healthSafety.length > 0 ? imsPolicy.healthSafety : defaultPolicy.healthSafety).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-slate-50 rounded-3xl p-6">
+              <h3 className="font-semibold text-hyves-black mb-4">Continuous Improvement</h3>
+              <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                {(imsPolicy.continuousImprovement.length > 0 ? imsPolicy.continuousImprovement : defaultPolicy.continuousImprovement).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="mt-8 bg-slate-50 rounded-3xl p-6">
+            <h3 className="font-semibold text-hyves-black mb-4">Compliance</h3>
+            <p className="text-slate-600">{imsPolicy.compliance || defaultPolicy.compliance}</p>
+          </div>
+        </>
+      );
+    }
+
+    if (activePolicy.id === "whistleblower") {
+      return (
+        <div className="space-y-6">
+          <p className="text-slate-600 leading-relaxed">{whistleblowerContent}</p>
+          <div className="bg-slate-50 rounded-3xl p-6">
+            <h3 className="font-semibold text-hyves-black mb-4">A Safe Reporting Channel</h3>
+            <p className="text-slate-600">You may submit concerns in confidence and without fear of retaliation. All reports are investigated with impartiality and discretion.</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (activePolicy.id === "information-security") {
+      return (
+        <div className="space-y-6">
+          <p className="text-slate-600 leading-relaxed">Hyves Technology Limited protects the confidentiality, integrity, and availability of our information assets through comprehensive governance, controls, and staff awareness.</p>
+          <div className="bg-slate-50 rounded-3xl p-6">
+            <h3 className="font-semibold text-hyves-black mb-4">Information Security Principles</h3>
+            <ul className="space-y-3 text-slate-600 list-disc list-inside">
+              {(imsPolicy.informationSecurity.length > 0 ? imsPolicy.informationSecurity : defaultPolicy.informationSecurity).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <div className="bg-hyves-bg min-h-screen">
+      <section className="pt-24 pb-12 lg:pt-28 lg:pb-16 relative overflow-hidden">
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-4xl mx-auto text-center"
+          >
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-hyves-black mb-4 leading-tight">
+              Company Policies
+            </h1>
+            <p className="text-base text-slate-600 max-w-2xl mx-auto">
+              All of the company policies in one place for easy review and navigation.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="pb-20">
+        <div className="container mx-auto px-6">
+          <div className="grid gap-10 lg:grid-cols-[280px_1fr]">
+            <aside className="space-y-4">
+              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-hyves-black mb-4">Policies</h2>
+                <nav className="space-y-2">
+                  {policies.map((policy) => {
+                    const Icon = policy.icon;
+                    const isActive = policy.id === activePolicy.id;
+                    return (
+                      <Link
+                        key={policy.id}
+                        to={`/policies#${policy.id}`}
+                        className={`block rounded-2xl px-4 py-3 transition-all ${isActive ? "bg-hyves-gold/10 border border-hyves-gold text-hyves-black" : "border border-slate-200 bg-slate-50 text-slate-600 hover:border-hyves-gold/70 hover:bg-slate-100"}`}
+                        onClick={() => setSelectedPolicy(policy.id)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-hyves-gold">
+                            <Icon className="w-5 h-5" />
+                          </span>
+                          <div>
+                            <p className="font-semibold">{policy.title}</p>
+                            <p className="text-xs text-slate-500">{policy.description}</p>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+            </aside>
+
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+              {loading ? (
+                <div className="flex min-h-[320px] items-center justify-center">
+                  <Loader2 className="w-8 h-8 text-hyves-gold animate-spin" />
+                </div>
+              ) : (
+                <>
+                  <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.24em] text-hyves-gold">Policy</p>
+                      <h2 className="text-3xl font-bold text-hyves-black mt-2">{activePolicy.title}</h2>
+                    </div>
+                    <div className="rounded-3xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                      {activePolicy.description}
+                    </div>
+                  </div>
+                  <div className="space-y-6">
+                    {renderContent()}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
