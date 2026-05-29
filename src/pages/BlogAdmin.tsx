@@ -45,6 +45,7 @@ export default function BlogAdmin() {
     compliance: "",
     continuousImprovement: []
   });
+  const [whistleblowerPolicy, setWhistleblowerPolicy] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -71,6 +72,7 @@ export default function BlogAdmin() {
       fetchRoles();
     } else {
       fetchImsPolicy();
+      fetchWhistleblowerPolicy();
     }
   }, [activeTab]);
 
@@ -118,20 +120,44 @@ export default function BlogAdmin() {
       });
   };
 
-  const handleImsPolicySubmit = async (e: React.FormEvent) => {
+  const fetchWhistleblowerPolicy = () => {
+    setLoading(true);
+    fetch("/api/whistleblower-policy")
+      .then((res) => res.json())
+      .then((data) => {
+        setWhistleblowerPolicy(data?.content || "");
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching Whistleblower Policy:", err);
+        setLoading(false);
+      });
+  };
+
+  const handlePolicySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/ims-policy", {
+      const imsResponse = await fetch("/api/ims-policy", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(imsPolicy)
       });
-      if (res.ok) {
-        setIsAdding(false);
-        alert("IMS Policy saved successfully!");
+
+      const whistleblowerResponse = await fetch("/api/whistleblower-policy", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: whistleblowerPolicy })
+      });
+
+      if (imsResponse.ok && whistleblowerResponse.ok) {
+        fetchImsPolicy();
+        fetchWhistleblowerPolicy();
+        alert("Policies saved successfully!");
+      } else {
+        console.error("Failed to save one or more policies", imsResponse, whistleblowerResponse);
       }
     } catch (error) {
-      console.error("Error saving IMS Policy:", error);
+      console.error("Error saving policies:", error);
     }
   };
 
@@ -409,7 +435,7 @@ export default function BlogAdmin() {
                 <p className="text-slate-500 text-sm mt-1">Update the Integrated Management System Policy content</p>
               </div>
               <Button 
-                onClick={handleImsPolicySubmit}
+                onClick={handlePolicySubmit}
                 className="bg-hyves-gold text-hyves-black font-bold rounded-full px-6 hover:bg-hyves-gold/90"
               >
                 <Save className="w-4 h-4 mr-2" />
@@ -417,17 +443,41 @@ export default function BlogAdmin() {
               </Button>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-lg font-bold text-hyves-black">
-                IMS Policy Content
-              </label>
-              <textarea 
-                value={imsPolicy.commitment}
-                onChange={(e) => setImsPolicy({ ...imsPolicy, commitment: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-96 resize-none text-base"
-                placeholder="Enter the full IMS Policy content here..."
-              />
-            </div>
+            <form onSubmit={handlePolicySubmit} className="space-y-8">
+              <div className="space-y-2">
+                <label className="text-lg font-bold text-hyves-black">
+                  IMS Policy Content
+                </label>
+                <textarea 
+                  value={imsPolicy.commitment}
+                  onChange={(e) => setImsPolicy({ ...imsPolicy, commitment: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-72 resize-none text-base"
+                  placeholder="Enter the full IMS Policy content here..."
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-lg font-bold text-hyves-black">
+                  Whistleblower Policy Content
+                </label>
+                <textarea
+                  value={whistleblowerPolicy}
+                  onChange={(e) => setWhistleblowerPolicy(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-72 resize-none text-base"
+                  placeholder="Enter the full Whistleblower Policy content here..."
+                />
+              </div>
+
+              <div className="flex justify-end gap-4">
+                <Button type="button" variant="outline" onClick={() => { fetchImsPolicy(); fetchWhistleblowerPolicy(); }}>
+                  Reset
+                </Button>
+                <Button type="submit" className="bg-hyves-gold text-hyves-black font-bold px-8">
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Changes
+                </Button>
+              </div>
+            </form>
           </motion.div>
         )}
 

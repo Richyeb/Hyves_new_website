@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 const BLOG_FILE = path.join(__dirname, "blog-posts.json");
 const ROLES_FILE = path.join(__dirname, "roles.json");
 const IMS_POLICY_FILE = path.join(__dirname, "ims-policy.json");
+const WHISTLEBLOWER_POLICY_FILE = path.join(__dirname, "whistleblower-policy.json");
 
 async function ensureFiles() {
   try {
@@ -32,6 +33,13 @@ async function ensureFiles() {
       healthSafety: [],
       compliance: "",
       continuousImprovement: []
+    }));
+  }
+  try {
+    await fs.access(WHISTLEBLOWER_POLICY_FILE);
+  } catch {
+    await fs.writeFile(WHISTLEBLOWER_POLICY_FILE, JSON.stringify({
+      content: ""
     }));
   }
 }
@@ -155,6 +163,25 @@ async function startServer() {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to save IMS Policy" });
+    }
+  });
+
+  app.get("/api/whistleblower-policy", async (req, res) => {
+    try {
+      const data = await fs.readFile(WHISTLEBLOWER_POLICY_FILE, "utf-8");
+      res.json(JSON.parse(data));
+    } catch (error) {
+      res.status(500).json({ error: "Failed to read Whistleblower Policy" });
+    }
+  });
+
+  app.put("/api/whistleblower-policy", async (req, res) => {
+    try {
+      const policyData = req.body;
+      await fs.writeFile(WHISTLEBLOWER_POLICY_FILE, JSON.stringify(policyData, null, 2));
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to save Whistleblower Policy" });
     }
   });
 

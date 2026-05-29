@@ -67,9 +67,9 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-hyves-black mb-6">Resources</h4>
             <ul className="space-y-4">
-              <li><a href="#" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Whistleblower Policy</a></li>
-              <li><Link to="/ims-policy" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">IMS Policy</Link></li>
-              <li><a href="#" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Information Security Policy</a></li>
+              <li><Link to="/policies#whistleblower" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Whistleblower Policy</Link></li>
+              <li><Link to="/policies#ims" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">IMS Policy</Link></li>
+              <li><Link to="/policies#information-security" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Information Security Policy</Link></li>
               <li><Link to="/blog" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Blog</Link></li>
             </ul>
           </div>

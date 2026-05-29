@@ -17,7 +17,7 @@ import Careers from "@/pages/Careers";
 import BlogPost from "@/pages/BlogPost";
 import Product from "@/pages/Product";
 import Process from "@/pages/Process";
-import IMSPolicy from "@/pages/IMSPolicy";
+import Policies from "@/pages/Policies";
 
 export default function App() {
   return (
@@ -37,7 +37,8 @@ export default function App() {
             <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/blog/admin" element={<BlogAdmin />} />
             <Route path="/careers" element={<Careers />} />
-            <Route path="/ims-policy" element={<IMSPolicy />} />
+            <Route path="/policies" element={<Policies />} />
+            <Route path="/ims-policy" element={<Policies />} />
           </Routes>
         </main>
         <Footer />
