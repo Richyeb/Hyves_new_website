@@ -176,7 +176,11 @@ export default function BlogAdmin() {
       if (imsResponse.ok && whistleblowerResponse.ok) {
         setOriginalImsPolicy(imsPolicy);
         setOriginalWhistleblowerPolicy(whistleblowerPolicy);
-        setNotification({ type: "success", message: "Policies saved successfully." });
+        const notes: string[] = [];
+        if (imsBody && typeof imsBody === "object" && imsBody.note) notes.push(imsBody.note);
+        if (wbBody && typeof wbBody === "object" && wbBody.note) notes.push(wbBody.note);
+        const successMessage = notes.length > 0 ? `Policies saved (note: ${notes.join("; ")})` : "Policies saved successfully.";
+        setNotification({ type: "success", message: successMessage });
         try {
           if (typeof window !== "undefined" && "BroadcastChannel" in window) {
             const bc = new BroadcastChannel("policies");

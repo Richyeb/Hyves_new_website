@@ -2,6 +2,7 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs/promises";
+import os from "os";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,6 +12,10 @@ const BLOG_FILE = path.join(__dirname, "blog-posts.json");
 const ROLES_FILE = path.join(__dirname, "roles.json");
 const IMS_POLICY_FILE = path.join(__dirname, "ims-policy.json");
 const WHISTLEBLOWER_POLICY_FILE = path.join(__dirname, "whistleblower-policy.json");
+
+// In-memory fallbacks for environments with read-only filesystems (serverless)
+let _imsPolicyCache: any = null;
+let _whistleblowerCache: any = null;
 
 async function ensureFiles() {
   try {
@@ -149,8 +154,26 @@ async function startServer() {
   // IMS Policy API
   app.get("/api/ims-policy", async (req, res) => {
     try {
-      const data = await fs.readFile(IMS_POLICY_FILE, "utf-8");
-      res.json(JSON.parse(data));
+      // Prefer in-memory cache if present
+      if (_imsPolicyCache) return res.json(_imsPolicyCache);
+
+      try {
+        const data = await fs.readFile(IMS_POLICY_FILE, "utf-8");
+        const parsed = JSON.parse(data);
+        _imsPolicyCache = parsed;
+        return res.json(parsed);
+      } catch (err) {
+        // try tmp fallback
+        const tmpPath = path.join(os.tmpdir(), path.basename(IMS_POLICY_FILE));
+        try {
+          const data = await fs.readFile(tmpPath, "utf-8");
+          const parsed = JSON.parse(data);
+          _imsPolicyCache = parsed;
+          return res.json(parsed);
+        } catch (err2) {
+          throw err; // original
+        }
+      }
     } catch (error) {
       res.status(500).json({ error: "Failed to read IMS Policy" });
     }
@@ -164,7 +187,19 @@ async function startServer() {
       }
       // ensure directory exists (defensive)
       await fs.mkdir(path.dirname(IMS_POLICY_FILE), { recursive: true }).catch(() => {});
-      await fs.writeFile(IMS_POLICY_FILE, JSON.stringify(policyData, null, 2));
+      try {
+        await fs.writeFile(IMS_POLICY_FILE, JSON.stringify(policyData, null, 2));
+      } catch (writeErr: any) {
+        // If filesystem is read-only on serverless, fall back to tmp dir and memory cache
+        if (writeErr && (writeErr.code === "EROFS" || /read-only/i.test(String(writeErr)))) {
+          const tmpPath = path.join(os.tmpdir(), path.basename(IMS_POLICY_FILE));
+          await fs.writeFile(tmpPath, JSON.stringify(policyData, null, 2));
+          _imsPolicyCache = policyData;
+          return res.json({ success: true, ephemeral: true, note: `Saved to tmp (${tmpPath})` });
+        }
+        throw writeErr;
+      }
+      _imsPolicyCache = policyData;
       res.json({ success: true });
     } catch (error) {
       console.error("Error saving IMS policy:", error);
@@ -174,8 +209,19 @@ async function startServer() {
 
   app.get("/api/whistleblower-policy", async (req, res) => {
     try {
-      const data = await fs.readFile(WHISTLEBLOWER_POLICY_FILE, "utf-8");
-      res.json(JSON.parse(data));
+      if (_whistleblowerCache) return res.json(_whistleblowerCache);
+      try {
+        const data = await fs.readFile(WHISTLEBLOWER_POLICY_FILE, "utf-8");
+        const parsed = JSON.parse(data);
+        _whistleblowerCache = parsed;
+        return res.json(parsed);
+      } catch (err) {
+        const tmpPath = path.join(os.tmpdir(), path.basename(WHISTLEBLOWER_POLICY_FILE));
+        const data = await fs.readFile(tmpPath, "utf-8");
+        const parsed = JSON.parse(data);
+        _whistleblowerCache = parsed;
+        return res.json(parsed);
+      }
     } catch (error) {
       res.status(500).json({ error: "Failed to read Whistleblower Policy" });
     }
@@ -188,7 +234,18 @@ async function startServer() {
         return res.status(400).json({ error: "Invalid whistleblower payload" });
       }
       await fs.mkdir(path.dirname(WHISTLEBLOWER_POLICY_FILE), { recursive: true }).catch(() => {});
-      await fs.writeFile(WHISTLEBLOWER_POLICY_FILE, JSON.stringify(policyData, null, 2));
+      try {
+        await fs.writeFile(WHISTLEBLOWER_POLICY_FILE, JSON.stringify(policyData, null, 2));
+      } catch (writeErr: any) {
+        if (writeErr && (writeErr.code === "EROFS" || /read-only/i.test(String(writeErr)))) {
+          const tmpPath = path.join(os.tmpdir(), path.basename(WHISTLEBLOWER_POLICY_FILE));
+          await fs.writeFile(tmpPath, JSON.stringify(policyData, null, 2));
+          _whistleblowerCache = policyData;
+          return res.json({ success: true, ephemeral: true, note: `Saved to tmp (${tmpPath})` });
+        }
+        throw writeErr;
+      }
+      _whistleblowerCache = policyData;
       res.json({ success: true });
     } catch (error) {
       console.error("Error saving Whistleblower policy:", error);
