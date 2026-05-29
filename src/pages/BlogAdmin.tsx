@@ -578,6 +578,8 @@ export default function BlogAdmin() {
                     </Button>
                   </div>
                 </form>
+              </div>
+            </div>
           </motion.div>
         )}
 

@@ -1,0 +1,6 @@
+src/components/Logo.tsx(3,18): error TS2307: Cannot find module '../assets/logo.svg' or its corresponding type declarations.
+src/components/SocialProof.tsx(4,19): error TS2307: Cannot find module '@/assets/Partners/Vanni.png' or its corresponding type declarations.
+src/components/SocialProof.tsx(5,18): error TS2307: Cannot find module '@/assets/Partners/Bold.png' or its corresponding type declarations.
+src/components/SocialProof.tsx(6,20): error TS2307: Cannot find module '@/assets/Partners/Fincra.png' or its corresponding type declarations.
+src/components/SocialProof.tsx(7,19): error TS2307: Cannot find module '@/assets/Partners/Peswa.png' or its corresponding type declarations.
+src/components/SocialProof.tsx(8,21): error TS2307: Cannot find module '@/assets/Partners/Prembly.png' or its corresponding type declarations.
