@@ -45,7 +45,16 @@ export default function BlogAdmin() {
     compliance: "",
     continuousImprovement: []
   });
+  const [originalImsPolicy, setOriginalImsPolicy] = useState<IMSPolicy>({
+    commitment: "",
+    qualityObjectives: [],
+    informationSecurity: [],
+    healthSafety: [],
+    compliance: "",
+    continuousImprovement: []
+  });
   const [whistleblowerPolicy, setWhistleblowerPolicy] = useState("");
+  const [originalWhistleblowerPolicy, setOriginalWhistleblowerPolicy] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -112,6 +121,7 @@ export default function BlogAdmin() {
       .then((res) => res.json())
       .then((data) => {
         setImsPolicy(data);
+        setOriginalImsPolicy(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -125,7 +135,9 @@ export default function BlogAdmin() {
     fetch("/api/whistleblower-policy")
       .then((res) => res.json())
       .then((data) => {
-        setWhistleblowerPolicy(data?.content || "");
+        const content = data?.content || "";
+        setWhistleblowerPolicy(content);
+        setOriginalWhistleblowerPolicy(content);
         setLoading(false);
       })
       .catch((err) => {
@@ -150,8 +162,8 @@ export default function BlogAdmin() {
       });
 
       if (imsResponse.ok && whistleblowerResponse.ok) {
-        fetchImsPolicy();
-        fetchWhistleblowerPolicy();
+        setOriginalImsPolicy(imsPolicy);
+        setOriginalWhistleblowerPolicy(whistleblowerPolicy);
         alert("Policies saved successfully!");
       } else {
         console.error("Failed to save one or more policies", imsResponse, whistleblowerResponse);
@@ -434,13 +446,6 @@ export default function BlogAdmin() {
                 </h2>
                 <p className="text-slate-500 text-sm mt-1">Update the Integrated Management System Policy content</p>
               </div>
-              <Button 
-                onClick={handlePolicySubmit}
-                className="bg-hyves-gold text-hyves-black font-bold rounded-full px-6 hover:bg-hyves-gold/90"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Save Changes
-              </Button>
             </div>
 
             <form onSubmit={handlePolicySubmit} className="space-y-8">
@@ -469,7 +474,10 @@ export default function BlogAdmin() {
               </div>
 
               <div className="flex justify-end gap-4">
-                <Button type="button" variant="outline" onClick={() => { fetchImsPolicy(); fetchWhistleblowerPolicy(); }}>
+                <Button type="button" variant="outline" onClick={() => {
+                  setImsPolicy(originalImsPolicy);
+                  setWhistleblowerPolicy(originalWhistleblowerPolicy);
+                }}>
                   Reset
                 </Button>
                 <Button type="submit" className="bg-hyves-gold text-hyves-black font-bold px-8">
