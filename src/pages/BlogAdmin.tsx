@@ -34,7 +34,8 @@ interface IMSPolicy {
 }
 
 export default function BlogAdmin() {
-  const [activeTab, setActiveTab] = useState<"posts" | "roles" | "ims">("posts");
+  const [activeTab, setActiveTab] = useState<"posts" | "roles" | "policies">("posts");
+  const [selectedPolicy, setSelectedPolicy] = useState<"ims" | "whistleblower" | "information-security">("ims");
   const [posts, setPosts] = useState<Post[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [imsPolicy, setImsPolicy] = useState<IMSPolicy>({
@@ -234,7 +235,7 @@ export default function BlogAdmin() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div>
             <h1 className="text-3xl font-bold text-hyves-black">Backoffice</h1>
-            <p className="text-slate-500">Manage your blog content and open positions.</p>
+            <p className="text-slate-500">Manage your blog content, career listings, and deployed policies.</p>
           </div>
           <div className="flex gap-2 bg-white p-1 rounded-xl border border-slate-200">
             <button 
@@ -252,14 +253,14 @@ export default function BlogAdmin() {
               Careers
             </button>
             <button 
-              onClick={() => setActiveTab("ims")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "ims" ? "bg-hyves-black text-white" : "text-slate-500 hover:bg-slate-50"}`}
+              onClick={() => setActiveTab("policies")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "policies" ? "bg-hyves-black text-white" : "text-slate-500 hover:bg-slate-50"}`}
             >
               <Shield className="w-4 h-4" />
-              IMS Policy
+              Policies
             </button>
           </div>
-          {activeTab !== "ims" && (
+          {activeTab !== "policies" && (
             <Button 
               onClick={() => setIsAdding(true)}
               className="bg-hyves-gold text-hyves-black font-bold rounded-full px-6 hover:bg-hyves-gold/90"
@@ -431,8 +432,8 @@ export default function BlogAdmin() {
           </motion.div>
         )}
 
-        {/* IMS Policy Section */}
-        {activeTab === "ims" && (
+        {/* Policies Section */}
+        {activeTab === "policies" && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -442,54 +443,145 @@ export default function BlogAdmin() {
               <div>
                 <h2 className="text-xl font-bold text-hyves-black flex items-center gap-2">
                   <Shield className="w-5 h-5 text-hyves-gold" />
-                  IMS Policy Management
+                  Policy Management
                 </h2>
-                <p className="text-slate-500 text-sm mt-1">Update the Integrated Management System Policy content</p>
+                <p className="text-slate-500 text-sm mt-1">Edit all deployed policies and deploy changes to the public policy page.</p>
               </div>
             </div>
 
-            <form onSubmit={handlePolicySubmit} className="space-y-8">
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black">
-                  IMS Policy Content
-                </label>
-                <textarea 
-                  value={imsPolicy.commitment}
-                  onChange={(e) => setImsPolicy({ ...imsPolicy, commitment: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-72 resize-none text-base"
-                  placeholder="Enter the full IMS Policy content here..."
-                />
+            <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <h3 className="text-sm font-bold text-hyves-black uppercase tracking-[0.24em] mb-4">Policies</h3>
+                <div className="space-y-3">
+                  {[
+                    { id: "ims", label: "IMS Policy" },
+                    { id: "whistleblower", label: "Whistleblower Policy" },
+                    { id: "information-security", label: "Information Security Policy" }
+                  ].map((policy) => (
+                    <button
+                      key={policy.id}
+                      type="button"
+                      onClick={() => setSelectedPolicy(policy.id as "ims" | "whistleblower" | "information-security")}
+                      className={`w-full text-left rounded-2xl px-4 py-3 transition ${selectedPolicy === policy.id ? "bg-hyves-gold/10 border border-hyves-gold text-hyves-black" : "border border-slate-200 bg-white text-slate-600 hover:border-hyves-gold/70"}`}
+                    >
+                      {policy.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-lg font-bold text-hyves-black">
-                  Whistleblower Policy Content
-                </label>
-                <textarea
-                  value={whistleblowerPolicy}
-                  onChange={(e) => setWhistleblowerPolicy(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-72 resize-none text-base"
-                  placeholder="Enter the full Whistleblower Policy content here..."
-                />
-              </div>
+              <div className="rounded-3xl border border-slate-200 bg-white p-8">
+                <div className="mb-8">
+                  <h3 className="text-lg font-bold text-hyves-black mb-2">{selectedPolicy === "ims" ? "IMS Policy" : selectedPolicy === "whistleblower" ? "Whistleblower Policy" : "Information Security Policy"}</h3>
+                  <p className="text-slate-500 text-sm">
+                    {selectedPolicy === "ims" ? "Edit the full IMS policy content deployed to the public policies page." : selectedPolicy === "whistleblower" ? "Edit the whistleblower policy content deployed to the public policies page." : "Edit the information security policy statements deployed to the public policies page."}
+                  </p>
+                </div>
 
-              <div className="flex justify-end gap-4">
-                <Button type="button" variant="outline" onClick={() => {
-                  setImsPolicy(originalImsPolicy);
-                  setWhistleblowerPolicy(originalWhistleblowerPolicy);
-                }}>
-                  Reset
-                </Button>
-                <Button type="submit" className="bg-hyves-gold text-hyves-black font-bold px-8">
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Changes
-                </Button>
-              </div>
-            </form>
+                <form onSubmit={handlePolicySubmit} className="space-y-8">
+                  {selectedPolicy === "ims" ? (
+                    <>
+                      <div className="space-y-2">
+                        <label className="text-lg font-bold text-hyves-black">IMS Policy Content</label>
+                        <textarea
+                          value={imsPolicy.commitment}
+                          onChange={(e) => setImsPolicy({ ...imsPolicy, commitment: e.target.value })}
+                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-64 resize-none text-base"
+                          placeholder="Enter the full IMS policy content here..."
+                        />
+                      </div>
+
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <label className="text-lg font-bold text-hyves-black">Quality Objectives</label>
+                          <textarea
+                            value={imsPolicy.qualityObjectives.join("\n")}
+                            onChange={(e) => setImsPolicy({ ...imsPolicy, qualityObjectives: e.target.value.split("\n").filter(Boolean) })}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-48 resize-none text-base"
+                            placeholder="Enter one objective per line"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-lg font-bold text-hyves-black">Information Security</label>
+                          <textarea
+                            value={imsPolicy.informationSecurity.join("\n")}
+                            onChange={(e) => setImsPolicy({ ...imsPolicy, informationSecurity: e.target.value.split("\n").filter(Boolean) })}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-48 resize-none text-base"
+                            placeholder="Enter one security statement per line"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <label className="text-lg font-bold text-hyves-black">Health & Safety</label>
+                          <textarea
+                            value={imsPolicy.healthSafety.join("\n")}
+                            onChange={(e) => setImsPolicy({ ...imsPolicy, healthSafety: e.target.value.split("\n").filter(Boolean) })}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-48 resize-none text-base"
+                            placeholder="Enter one health & safety statement per line"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-lg font-bold text-hyves-black">Continuous Improvement</label>
+                          <textarea
+                            value={imsPolicy.continuousImprovement.join("\n")}
+                            onChange={(e) => setImsPolicy({ ...imsPolicy, continuousImprovement: e.target.value.split("\n").filter(Boolean) })}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-48 resize-none text-base"
+                            placeholder="Enter one improvement action per line"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-lg font-bold text-hyves-black">Compliance Summary</label>
+                        <textarea
+                          value={imsPolicy.compliance}
+                          onChange={(e) => setImsPolicy({ ...imsPolicy, compliance: e.target.value })}
+                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-32 resize-none text-base"
+                          placeholder="Enter the IMS compliance statement here..."
+                        />
+                      </div>
+                    </>
+                  ) : selectedPolicy === "whistleblower" ? (
+                    <div className="space-y-2">
+                      <label className="text-lg font-bold text-hyves-black">Whistleblower Policy Content</label>
+                      <textarea
+                        value={whistleblowerPolicy}
+                        onChange={(e) => setWhistleblowerPolicy(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-96 resize-none text-base"
+                        placeholder="Enter the full whistleblower policy content here..."
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <label className="text-lg font-bold text-hyves-black">Information Security Policy Statements</label>
+                      <textarea
+                        value={imsPolicy.informationSecurity.join("\n")}
+                        onChange={(e) => setImsPolicy({ ...imsPolicy, informationSecurity: e.target.value.split("\n").filter(Boolean) })}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-96 resize-none text-base"
+                        placeholder="Enter one information security statement per line"
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex justify-end gap-4">
+                    <Button type="button" variant="outline" onClick={() => {
+                      setImsPolicy(originalImsPolicy);
+                      setWhistleblowerPolicy(originalWhistleblowerPolicy);
+                    }}>
+                      Reset
+                    </Button>
+                    <Button type="submit" className="bg-hyves-gold text-hyves-black font-bold px-8">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                  </div>
+                </form>
           </motion.div>
         )}
 
-        {activeTab !== "ims" && (
+        {activeTab !== "policies" && (
         <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden">
           <div className="p-6 border-b border-slate-100 bg-slate-50/50">
             <h2 className="font-bold text-hyves-black">
