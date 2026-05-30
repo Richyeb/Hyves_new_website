@@ -271,6 +271,11 @@ async function startServer() {
     }
   });
 
+  app.options("/api/terms-of-service-policy", async (req, res) => {
+    res.set("Allow", "GET,PUT,POST,OPTIONS");
+    res.sendStatus(204);
+  });
+
   app.get("/api/terms-of-service-policy", async (req, res) => {
     try {
       if (_termsPolicyCache) return res.json(_termsPolicyCache);
@@ -295,30 +300,47 @@ async function startServer() {
     }
   });
 
+  const saveTermsPolicy = async (policyData: any, res: express.Response) => {
+    if (!policyData || typeof policyData !== "object" || typeof policyData.content !== "string") {
+      return res.status(400).json({ error: "Invalid Terms of Service payload" });
+    }
+    await fs.mkdir(path.dirname(TERMS_POLICY_FILE), { recursive: true }).catch(() => {});
+    try {
+      await fs.writeFile(TERMS_POLICY_FILE, JSON.stringify(policyData, null, 2));
+    } catch (writeErr: any) {
+      if (writeErr && (writeErr.code === "EROFS" || /read-only/i.test(String(writeErr)))) {
+        const tmpPath = path.join(os.tmpdir(), path.basename(TERMS_POLICY_FILE));
+        await fs.writeFile(tmpPath, JSON.stringify(policyData, null, 2));
+        _termsPolicyCache = policyData;
+        return res.json({ success: true, ephemeral: true, note: `Saved to tmp (${tmpPath})` });
+      }
+      throw writeErr;
+    }
+    _termsPolicyCache = policyData;
+    return res.json({ success: true });
+  };
+
   app.put("/api/terms-of-service-policy", async (req, res) => {
     try {
-      const policyData = req.body;
-      if (!policyData || typeof policyData !== "object" || typeof policyData.content !== "string") {
-        return res.status(400).json({ error: "Invalid Terms of Service payload" });
-      }
-      await fs.mkdir(path.dirname(TERMS_POLICY_FILE), { recursive: true }).catch(() => {});
-      try {
-        await fs.writeFile(TERMS_POLICY_FILE, JSON.stringify(policyData, null, 2));
-      } catch (writeErr: any) {
-        if (writeErr && (writeErr.code === "EROFS" || /read-only/i.test(String(writeErr)))) {
-          const tmpPath = path.join(os.tmpdir(), path.basename(TERMS_POLICY_FILE));
-          await fs.writeFile(tmpPath, JSON.stringify(policyData, null, 2));
-          _termsPolicyCache = policyData;
-          return res.json({ success: true, ephemeral: true, note: `Saved to tmp (${tmpPath})` });
-        }
-        throw writeErr;
-      }
-      _termsPolicyCache = policyData;
-      res.json({ success: true });
+      return await saveTermsPolicy(req.body, res);
     } catch (error) {
       console.error("Error saving Terms of Service policy:", error);
       res.status(500).json({ error: "Failed to save Terms of Service Policy", detail: String(error) });
     }
+  });
+
+  app.post("/api/terms-of-service-policy", async (req, res) => {
+    try {
+      return await saveTermsPolicy(req.body, res);
+    } catch (error) {
+      console.error("Error saving Terms of Service policy:", error);
+      res.status(500).json({ error: "Failed to save Terms of Service Policy", detail: String(error) });
+    }
+  });
+
+  app.options("/api/privacy-policy", async (req, res) => {
+    res.set("Allow", "GET,PUT,POST,OPTIONS");
+    res.sendStatus(204);
   });
 
   app.get("/api/privacy-policy", async (req, res) => {
@@ -345,26 +367,38 @@ async function startServer() {
     }
   });
 
+  const savePrivacyPolicy = async (policyData: any, res: express.Response) => {
+    if (!policyData || typeof policyData !== "object" || typeof policyData.content !== "string") {
+      return res.status(400).json({ error: "Invalid Privacy Policy payload" });
+    }
+    await fs.mkdir(path.dirname(PRIVACY_POLICY_FILE), { recursive: true }).catch(() => {});
+    try {
+      await fs.writeFile(PRIVACY_POLICY_FILE, JSON.stringify(policyData, null, 2));
+    } catch (writeErr: any) {
+      if (writeErr && (writeErr.code === "EROFS" || /read-only/i.test(String(writeErr)))) {
+        const tmpPath = path.join(os.tmpdir(), path.basename(PRIVACY_POLICY_FILE));
+        await fs.writeFile(tmpPath, JSON.stringify(policyData, null, 2));
+        _privacyPolicyCache = policyData;
+        return res.json({ success: true, ephemeral: true, note: `Saved to tmp (${tmpPath})` });
+      }
+      throw writeErr;
+    }
+    _privacyPolicyCache = policyData;
+    return res.json({ success: true });
+  };
+
   app.put("/api/privacy-policy", async (req, res) => {
     try {
-      const policyData = req.body;
-      if (!policyData || typeof policyData !== "object" || typeof policyData.content !== "string") {
-        return res.status(400).json({ error: "Invalid Privacy Policy payload" });
-      }
-      await fs.mkdir(path.dirname(PRIVACY_POLICY_FILE), { recursive: true }).catch(() => {});
-      try {
-        await fs.writeFile(PRIVACY_POLICY_FILE, JSON.stringify(policyData, null, 2));
-      } catch (writeErr: any) {
-        if (writeErr && (writeErr.code === "EROFS" || /read-only/i.test(String(writeErr)))) {
-          const tmpPath = path.join(os.tmpdir(), path.basename(PRIVACY_POLICY_FILE));
-          await fs.writeFile(tmpPath, JSON.stringify(policyData, null, 2));
-          _privacyPolicyCache = policyData;
-          return res.json({ success: true, ephemeral: true, note: `Saved to tmp (${tmpPath})` });
-        }
-        throw writeErr;
-      }
-      _privacyPolicyCache = policyData;
-      res.json({ success: true });
+      return await savePrivacyPolicy(req.body, res);
+    } catch (error) {
+      console.error("Error saving Privacy policy:", error);
+      res.status(500).json({ error: "Failed to save Privacy Policy", detail: String(error) });
+    }
+  });
+
+  app.post("/api/privacy-policy", async (req, res) => {
+    try {
+      return await savePrivacyPolicy(req.body, res);
     } catch (error) {
       console.error("Error saving Privacy policy:", error);
       res.status(500).json({ error: "Failed to save Privacy Policy", detail: String(error) });
