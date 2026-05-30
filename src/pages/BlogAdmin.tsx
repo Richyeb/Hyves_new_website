@@ -703,6 +703,7 @@ export default function BlogAdmin() {
                       Save Changes
                     </Button>
                   </div>
+                </div>
                 </form>
               </div>
             </div>
