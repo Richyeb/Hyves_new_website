@@ -13,36 +13,16 @@ interface IMSPolicy {
 }
 
 const defaultPolicy: IMSPolicy = {
-  commitment: "Hyves Technology Limited is committed to establishing, implementing, maintaining, and continually improving an Integrated Management System (IMS) that meets the requirements of ISO 9001:2015, ISO 27001:2022, and ISO 45001:2018. This policy demonstrates our dedication to quality, information security, and occupational health and safety.",
-  qualityObjectives: [
-    "Deliver products and services that consistently meet customer requirements and expectations.",
-    "Enhance customer satisfaction through effective quality management processes.",
-    "Continually improve the effectiveness of the Quality Management System.",
-    "Ensure compliance with applicable legal and regulatory requirements."
-  ],
-  informationSecurity: [
-    "Protect the confidentiality, integrity, and availability of information assets.",
-    "Implement robust cybersecurity measures to safeguard against threats.",
-    "Conduct regular risk assessments and security audits.",
-    "Provide ongoing security awareness training for all employees."
-  ],
-  healthSafety: [
-    "Provide a safe and healthy work environment for all employees and stakeholders.",
-    "Identify and control workplace hazards to prevent injury and illness.",
-    "Promote employee well-being through wellness programs and initiatives.",
-    "Ensure compliance with occupational health and safety regulations."
-  ],
-  compliance: "Our Integrated Management System is certified to the following international standards: ISO 9001:2015 (Quality Management), ISO 27001:2022 (Information Security), and ISO 45001:2018 (Occupational Health & Safety).",
-  continuousImprovement: [
-    "Regular internal audits and management reviews.",
-    "Monitoring and measurement of key performance indicators.",
-    "Implementation of corrective and preventive actions.",
-    "Engagement with stakeholders for feedback and improvement."
-  ]
+  commitment: "",
+  qualityObjectives: [],
+  informationSecurity: [],
+  healthSafety: [],
+  compliance: "",
+  continuousImprovement: []
 };
 
 const defaultWhistleblower = {
-  content: "Hyves Technology Limited is committed to providing a safe, confidential, and anonymous whistleblowing channel for reporting misconduct, unethical behavior, or non-compliance. All reports will be taken seriously, investigated promptly, and handled without retaliation.",
+  content: "",
 };
 
 const policies = [
@@ -90,11 +70,17 @@ export default function Policies() {
       const imsData = imsRes.ok ? await imsRes.json() : null;
       const wbData = wbRes.ok ? await wbRes.json() : null;
 
-      if (imsData && imsData.commitment) {
+      // Accept and apply policy objects even if fields are empty.
+      if (imsData) {
         setImsPolicy(imsData);
+      } else {
+        setImsPolicy(defaultPolicy);
       }
-      if (wbData?.content) {
-        setWhistleblowerContent(wbData.content);
+
+      if (wbData) {
+        setWhistleblowerContent(wbData.content ?? "");
+      } else {
+        setWhistleblowerContent(defaultWhistleblower.content);
       }
     } catch (error) {
       console.error("Error loading policies:", error);
@@ -132,61 +118,73 @@ export default function Policies() {
 
   const renderContent = () => {
     if (activePolicy.id === "ims") {
-      return (
-        <> 
-          <p className="text-slate-600 leading-relaxed mb-6">{imsPolicy.commitment || defaultPolicy.commitment}</p>
-          <div className="grid gap-8 md:grid-cols-2">
-            <div className="bg-slate-50 rounded-3xl p-6">
-              <h3 className="font-semibold text-hyves-black mb-4">Quality Objectives</h3>
-              <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                {(imsPolicy.qualityObjectives.length > 0 ? imsPolicy.qualityObjectives : defaultPolicy.qualityObjectives).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+        return (
+          <>
+            {imsPolicy.commitment ? (
+              <p className="text-slate-600 leading-relaxed mb-6">{imsPolicy.commitment}</p>
+            ) : null}
+            <div className="grid gap-8 md:grid-cols-2">
+              {imsPolicy.qualityObjectives.length > 0 ? (
+                <div className="bg-slate-50 rounded-3xl p-6">
+                  <h3 className="font-semibold text-hyves-black mb-4">Quality Objectives</h3>
+                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                    {imsPolicy.qualityObjectives.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {imsPolicy.informationSecurity.length > 0 ? (
+                <div className="bg-slate-50 rounded-3xl p-6">
+                  <h3 className="font-semibold text-hyves-black mb-4">Information Security</h3>
+                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                    {imsPolicy.informationSecurity.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
-            <div className="bg-slate-50 rounded-3xl p-6">
-              <h3 className="font-semibold text-hyves-black mb-4">Information Security</h3>
-              <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                {(imsPolicy.informationSecurity.length > 0 ? imsPolicy.informationSecurity : defaultPolicy.informationSecurity).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+
+            <div className="grid gap-8 md:grid-cols-2 mt-8">
+              {imsPolicy.healthSafety.length > 0 ? (
+                <div className="bg-slate-50 rounded-3xl p-6">
+                  <h3 className="font-semibold text-hyves-black mb-4">Health & Safety</h3>
+                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                    {imsPolicy.healthSafety.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {imsPolicy.continuousImprovement.length > 0 ? (
+                <div className="bg-slate-50 rounded-3xl p-6">
+                  <h3 className="font-semibold text-hyves-black mb-4">Continuous Improvement</h3>
+                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                    {imsPolicy.continuousImprovement.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2 mt-8">
-            <div className="bg-slate-50 rounded-3xl p-6">
-              <h3 className="font-semibold text-hyves-black mb-4">Health & Safety</h3>
-              <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                {(imsPolicy.healthSafety.length > 0 ? imsPolicy.healthSafety : defaultPolicy.healthSafety).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-slate-50 rounded-3xl p-6">
-              <h3 className="font-semibold text-hyves-black mb-4">Continuous Improvement</h3>
-              <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                {(imsPolicy.continuousImprovement.length > 0 ? imsPolicy.continuousImprovement : defaultPolicy.continuousImprovement).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 bg-slate-50 rounded-3xl p-6">
-            <h3 className="font-semibold text-hyves-black mb-4">Compliance</h3>
-            <p className="text-slate-600">{imsPolicy.compliance || defaultPolicy.compliance}</p>
-          </div>
-        </>
-      );
-    }
+
+            {imsPolicy.compliance ? (
+              <div className="mt-8 bg-slate-50 rounded-3xl p-6">
+                <h3 className="font-semibold text-hyves-black mb-4">Compliance</h3>
+                <p className="text-slate-600">{imsPolicy.compliance}</p>
+              </div>
+            ) : null}
+          </>
+        );
+      }
 
     if (activePolicy.id === "whistleblower") {
       return (
         <div className="space-y-6">
-          <p className="text-slate-600 leading-relaxed">{whistleblowerContent}</p>
-          <div className="bg-slate-50 rounded-3xl p-6">
-            <h3 className="font-semibold text-hyves-black mb-4">A Safe Reporting Channel</h3>
-            <p className="text-slate-600">You may submit concerns in confidence and without fear of retaliation. All reports are investigated with impartiality and discretion.</p>
-          </div>
+          {whistleblowerContent ? <p className="text-slate-600 leading-relaxed">{whistleblowerContent}</p> : null}
         </div>
       );
     }
@@ -194,15 +192,16 @@ export default function Policies() {
     if (activePolicy.id === "information-security") {
       return (
         <div className="space-y-6">
-          <p className="text-slate-600 leading-relaxed">Hyves Technology Limited protects the confidentiality, integrity, and availability of our information assets through comprehensive governance, controls, and staff awareness.</p>
-          <div className="bg-slate-50 rounded-3xl p-6">
-            <h3 className="font-semibold text-hyves-black mb-4">Information Security Principles</h3>
-            <ul className="space-y-3 text-slate-600 list-disc list-inside">
-              {(imsPolicy.informationSecurity.length > 0 ? imsPolicy.informationSecurity : defaultPolicy.informationSecurity).map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
+          {imsPolicy.informationSecurity.length > 0 ? (
+            <div className="bg-slate-50 rounded-3xl p-6">
+              <h3 className="font-semibold text-hyves-black mb-4">Information Security Principles</h3>
+              <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                {imsPolicy.informationSecurity.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       );
     }
