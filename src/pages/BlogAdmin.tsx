@@ -35,7 +35,7 @@ interface IMSPolicy {
 
 export default function BlogAdmin() {
   const [activeTab, setActiveTab] = useState<"posts" | "roles" | "policies">("posts");
-  const [selectedPolicy, setSelectedPolicy] = useState<"ims" | "whistleblower" | "information-security">("ims");
+  const [selectedPolicy, setSelectedPolicy] = useState<"ims" | "whistleblower" | "information-security" | "terms-of-service" | "privacy-policy">("ims");
   const [posts, setPosts] = useState<Post[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [imsPolicy, setImsPolicy] = useState<IMSPolicy>({
@@ -56,6 +56,10 @@ export default function BlogAdmin() {
   });
   const [whistleblowerPolicy, setWhistleblowerPolicy] = useState("");
   const [originalWhistleblowerPolicy, setOriginalWhistleblowerPolicy] = useState("");
+  const [termsOfServicePolicy, setTermsOfServicePolicy] = useState("");
+  const [originalTermsOfServicePolicy, setOriginalTermsOfServicePolicy] = useState("");
+  const [privacyPolicy, setPrivacyPolicy] = useState("");
+  const [originalPrivacyPolicy, setOriginalPrivacyPolicy] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<null | { type: "success" | "error"; message: string }>(null);
@@ -88,9 +92,9 @@ export default function BlogAdmin() {
     } else if (activeTab === "roles") {
       fetchRoles();
     } else {
-      // Fetch both policies and only set loading to false when both are done
+      // Fetch all policy content and only set loading to false when complete
       setLoading(true);
-      Promise.all([fetchImsPolicy(), fetchWhistleblowerPolicy()]).finally(() => {
+      Promise.all([fetchImsPolicy(), fetchWhistleblowerPolicy(), fetchTermsPolicy(), fetchPrivacyPolicy()]).finally(() => {
         setLoading(false);
       });
     }
@@ -162,30 +166,78 @@ export default function BlogAdmin() {
     }
   };
 
+  const fetchTermsPolicy = async () => {
+    try {
+      const res = await fetch("/api/terms-of-service-policy");
+      if (!res.ok) throw new Error(`Terms of Service Policy: ${res.status}`);
+      const data = await res.json();
+      const content = data?.content || "";
+      setTermsOfServicePolicy(content);
+      setOriginalTermsOfServicePolicy(content);
+      return true;
+    } catch (err) {
+      console.error("Error fetching Terms of Service Policy:", err);
+      return false;
+    }
+  };
+
+  const fetchPrivacyPolicy = async () => {
+    try {
+      const res = await fetch("/api/privacy-policy");
+      if (!res.ok) throw new Error(`Privacy Policy: ${res.status}`);
+      const data = await res.json();
+      const content = data?.content || "";
+      setPrivacyPolicy(content);
+      setOriginalPrivacyPolicy(content);
+      return true;
+    } catch (err) {
+      console.error("Error fetching Privacy Policy:", err);
+      return false;
+    }
+  };
+
   const handlePolicySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const imsResponse = await fetch("/api/ims-policy", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(imsPolicy)
-      });
-      const whistleblowerResponse = await fetch("/api/whistleblower-policy", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: whistleblowerPolicy })
-      });
+      const [imsResponse, whistleblowerResponse, termsResponse, privacyResponse] = await Promise.all([
+        fetch("/api/ims-policy", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(imsPolicy)
+        }),
+        fetch("/api/whistleblower-policy", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: whistleblowerPolicy })
+        }),
+        fetch("/api/terms-of-service-policy", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: termsOfServicePolicy })
+        }),
+        fetch("/api/privacy-policy", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: privacyPolicy })
+        })
+      ]);
 
-      // Collect response bodies for better error reporting
       const imsBody = imsResponse.ok ? await imsResponse.json().catch(() => ({})) : await imsResponse.text().catch(() => "");
       const wbBody = whistleblowerResponse.ok ? await whistleblowerResponse.json().catch(() => ({})) : await whistleblowerResponse.text().catch(() => "");
+      const termsBody = termsResponse.ok ? await termsResponse.json().catch(() => ({})) : await termsResponse.text().catch(() => "");
+      const privacyBody = privacyResponse.ok ? await privacyResponse.json().catch(() => ({})) : await privacyResponse.text().catch(() => "");
 
-      if (imsResponse.ok && whistleblowerResponse.ok) {
+      if (imsResponse.ok && whistleblowerResponse.ok && termsResponse.ok && privacyResponse.ok) {
         setOriginalImsPolicy(imsPolicy);
         setOriginalWhistleblowerPolicy(whistleblowerPolicy);
+        setOriginalTermsOfServicePolicy(termsOfServicePolicy);
+        setOriginalPrivacyPolicy(privacyPolicy);
+
         const notes: string[] = [];
         if (imsBody && typeof imsBody === "object" && imsBody.note) notes.push(imsBody.note);
         if (wbBody && typeof wbBody === "object" && wbBody.note) notes.push(wbBody.note);
+        if (termsBody && typeof termsBody === "object" && termsBody.note) notes.push(termsBody.note);
+        if (privacyBody && typeof privacyBody === "object" && privacyBody.note) notes.push(privacyBody.note);
         const successMessage = notes.length > 0 ? `Policies saved (note: ${notes.join("; ")})` : "Policies saved successfully.";
         setNotification({ type: "success", message: successMessage });
         try {
@@ -197,7 +249,6 @@ export default function BlogAdmin() {
         } catch (e) {
           // ignore
         }
-        // also try to notify team images update if any were uploaded
         try {
           if (Object.values(teamFiles).some(Boolean) && typeof window !== "undefined" && "BroadcastChannel" in window) {
             const bc2 = new BroadcastChannel("policies");
@@ -211,8 +262,10 @@ export default function BlogAdmin() {
         const parts: string[] = [];
         if (!imsResponse.ok) parts.push(`IMS: ${typeof imsBody === "string" ? imsBody : JSON.stringify(imsBody)}`);
         if (!whistleblowerResponse.ok) parts.push(`Whistleblower: ${typeof wbBody === "string" ? wbBody : JSON.stringify(wbBody)}`);
+        if (!termsResponse.ok) parts.push(`Terms of Service: ${typeof termsBody === "string" ? termsBody : JSON.stringify(termsBody)}`);
+        if (!privacyResponse.ok) parts.push(`Privacy Policy: ${typeof privacyBody === "string" ? privacyBody : JSON.stringify(privacyBody)}`);
         const message = `Failed to save policies. ${parts.join(" | ")}`;
-        console.error(message, imsResponse, whistleblowerResponse);
+        console.error(message, imsResponse, whistleblowerResponse, termsResponse, privacyResponse);
         setNotification({ type: "error", message });
       }
     } catch (error) {
@@ -555,12 +608,14 @@ export default function BlogAdmin() {
                   {[
                     { id: "ims", label: "IMS Policy" },
                     { id: "whistleblower", label: "Whistleblower Policy" },
-                    { id: "information-security", label: "Information Security Policy" }
+                    { id: "information-security", label: "Information Security Policy" },
+                    { id: "terms-of-service", label: "Terms of Service" },
+                    { id: "privacy-policy", label: "Privacy Policy" }
                   ].map((policy) => (
                     <button
                       key={policy.id}
                       type="button"
-                      onClick={() => setSelectedPolicy(policy.id as "ims" | "whistleblower" | "information-security")}
+                      onClick={() => setSelectedPolicy(policy.id as "ims" | "whistleblower" | "information-security" | "terms-of-service" | "privacy-policy")}
                       className={`w-full text-left rounded-2xl px-4 py-3 transition ${selectedPolicy === policy.id ? "bg-hyves-gold/10 border border-hyves-gold text-hyves-black" : "border border-slate-200 bg-white text-slate-600 hover:border-hyves-gold/70"}`}
                     >
                       {policy.label}
@@ -571,9 +626,9 @@ export default function BlogAdmin() {
 
               <div className="rounded-3xl border border-slate-200 bg-white p-8">
                 <div className="mb-8">
-                  <h3 className="text-lg font-bold text-hyves-black mb-2">{selectedPolicy === "ims" ? "IMS Policy" : selectedPolicy === "whistleblower" ? "Whistleblower Policy" : "Information Security Policy"}</h3>
+                  <h3 className="text-lg font-bold text-hyves-black mb-2">{selectedPolicy === "ims" ? "IMS Policy" : selectedPolicy === "whistleblower" ? "Whistleblower Policy" : selectedPolicy === "information-security" ? "Information Security Policy" : selectedPolicy === "terms-of-service" ? "Terms of Service" : "Privacy Policy"}</h3>
                   <p className="text-slate-500 text-sm">
-                    {selectedPolicy === "ims" ? "Edit the full IMS policy content deployed to the public policies page." : selectedPolicy === "whistleblower" ? "Edit the whistleblower policy content deployed to the public policies page." : "Edit the information security policy statements deployed to the public policies page."}
+                    {selectedPolicy === "ims" ? "Edit the full IMS policy content deployed to the public policies page." : selectedPolicy === "whistleblower" ? "Edit the whistleblower policy content deployed to the public policies page." : selectedPolicy === "information-security" ? "Edit the information security policy statements deployed to the public policies page." : selectedPolicy === "terms-of-service" ? "Edit the terms of service content deployed to the public policies page." : "Edit the privacy policy content deployed to the public policies page."}
                   </p>
                 </div>
 
@@ -650,6 +705,26 @@ export default function BlogAdmin() {
                         onChange={(e) => setWhistleblowerPolicy(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-96 resize-none text-base"
                         placeholder="Enter the full whistleblower policy content here..."
+                      />
+                    </div>
+                  ) : selectedPolicy === "terms-of-service" ? (
+                    <div className="space-y-2">
+                      <label className="text-lg font-bold text-hyves-black">Terms of Service Content</label>
+                      <textarea
+                        value={termsOfServicePolicy}
+                        onChange={(e) => setTermsOfServicePolicy(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-96 resize-none text-base"
+                        placeholder="Enter the full Terms of Service content here..."
+                      />
+                    </div>
+                  ) : selectedPolicy === "privacy-policy" ? (
+                    <div className="space-y-2">
+                      <label className="text-lg font-bold text-hyves-black">Privacy Policy Content</label>
+                      <textarea
+                        value={privacyPolicy}
+                        onChange={(e) => setPrivacyPolicy(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none h-96 resize-none text-base"
+                        placeholder="Enter the full Privacy Policy content here..."
                       />
                     </div>
                   ) : (

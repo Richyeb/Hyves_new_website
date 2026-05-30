@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 const steps = [
   {
     number: "01",
-    title: "Register Your Cooperative",
+    title: "Onboard Your Cooperative",
     description: "Sign up and complete your profile. Our team will guide you through the initial setup process.",
     color: "bg-emerald-50 border-emerald-100"
   },

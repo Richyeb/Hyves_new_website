@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
-import { Loader2, Shield, AlertTriangle, Lock } from "lucide-react";
+import { Loader2, Shield, AlertTriangle, Lock, Globe, Users } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
@@ -44,6 +44,18 @@ const policies = [
     title: "Information Security Policy",
     description: "Protecting the confidentiality, integrity, and availability of information assets.",
     icon: Lock,
+  },
+  {
+    id: "terms-of-service",
+    title: "Terms of Service",
+    description: "Terms governing the use of our platform and services.",
+    icon: Globe,
+  },
+  {
+    id: "privacy-policy",
+    title: "Privacy Policy",
+    description: "How we handle and protect your personal information.",
+    icon: Users,
   }
 ];
 
@@ -52,6 +64,8 @@ export default function Policies() {
   const [selectedPolicy, setSelectedPolicy] = useState("ims");
   const [imsPolicy, setImsPolicy] = useState<IMSPolicy>(defaultPolicy);
   const [whistleblowerContent, setWhistleblowerContent] = useState(defaultWhistleblower.content);
+  const [termsContent, setTermsContent] = useState("");
+  const [privacyContent, setPrivacyContent] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,12 +78,16 @@ export default function Policies() {
   const fetchPolicies = async () => {
     setLoading(true);
     try {
-      const [imsRes, wbRes] = await Promise.all([
+      const [imsRes, wbRes, termsRes, privacyRes] = await Promise.all([
         fetch("/api/ims-policy"),
-        fetch("/api/whistleblower-policy")
+        fetch("/api/whistleblower-policy"),
+        fetch("/api/terms-of-service-policy"),
+        fetch("/api/privacy-policy")
       ]);
       const imsData = imsRes.ok ? await imsRes.json() : null;
       const wbData = wbRes.ok ? await wbRes.json() : null;
+      const termsData = termsRes.ok ? await termsRes.json() : null;
+      const privacyData = privacyRes.ok ? await privacyRes.json() : null;
 
       // Accept and apply policy objects even if fields are empty.
       if (imsData) {
@@ -83,6 +101,9 @@ export default function Policies() {
       } else {
         setWhistleblowerContent(defaultWhistleblower.content);
       }
+
+      setTermsContent(termsData?.content ?? "");
+      setPrivacyContent(privacyData?.content ?? "");
     } catch (error) {
       console.error("Error loading policies:", error);
     } finally {
@@ -206,6 +227,22 @@ const markdownComponents = {
       return (
         <div className="prose prose-sm max-w-none space-y-6">
           {whistleblowerContent ? <ReactMarkdown components={markdownComponents}>{whistleblowerContent}</ReactMarkdown> : null}
+        </div>
+      );
+    }
+
+    if (activePolicy.id === "terms-of-service") {
+      return (
+        <div className="prose prose-sm max-w-none space-y-6">
+          {termsContent ? <ReactMarkdown components={markdownComponents}>{termsContent}</ReactMarkdown> : null}
+        </div>
+      );
+    }
+
+    if (activePolicy.id === "privacy-policy") {
+      return (
+        <div className="prose prose-sm max-w-none space-y-6">
+          {privacyContent ? <ReactMarkdown components={markdownComponents}>{privacyContent}</ReactMarkdown> : null}
         </div>
       );
     }
