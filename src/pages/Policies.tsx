@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { Loader2, Shield, AlertTriangle, Lock } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 interface IMSPolicy {
   commitment: string;
@@ -116,75 +117,95 @@ export default function Policies() {
     return policies.find((policy) => policy.id === selectedPolicy) || policies[0];
   }, [selectedPolicy]);
 
+const markdownComponents = {
+    h1: ({node, ...props}: any) => <h1 className="text-2xl font-bold text-hyves-black mt-6 mb-4" {...props} />,
+    h2: ({node, ...props}: any) => <h2 className="text-xl font-bold text-hyves-black mt-5 mb-3" {...props} />,
+    h3: ({node, ...props}: any) => <h3 className="text-lg font-bold text-hyves-black mt-4 mb-2" {...props} />,
+    p: ({node, ...props}: any) => <p className="text-slate-600 leading-relaxed mb-4" {...props} />,
+    ul: ({node, ...props}: any) => <ul className="list-disc list-inside space-y-2 mb-4 text-slate-600" {...props} />,
+    ol: ({node, ...props}: any) => <ol className="list-decimal list-inside space-y-2 mb-4 text-slate-600" {...props} />,
+    li: ({node, ...props}: any) => <li className="text-slate-600" {...props} />,
+    strong: ({node, ...props}: any) => <strong className="font-bold text-hyves-black" {...props} />,
+    em: ({node, ...props}: any) => <em className="italic text-slate-600" {...props} />,
+    blockquote: ({node, ...props}: any) => <blockquote className="border-l-4 border-hyves-gold pl-4 italic text-slate-600 my-4" {...props} />,
+    code: ({node, inline, ...props}: any) => inline ? 
+      <code className="bg-slate-100 rounded px-2 py-1 text-sm font-mono text-hyves-black" {...props} /> :
+      <code className="bg-slate-100 rounded-lg p-4 block my-4 text-sm font-mono text-slate-600 overflow-auto" {...props} />,
+  };
+
   const renderContent = () => {
     if (activePolicy.id === "ims") {
-        return (
-          <>
-            {imsPolicy.commitment ? (
-              <p className="text-slate-600 leading-relaxed mb-6">{imsPolicy.commitment}</p>
-            ) : null}
-            <div className="grid gap-8 md:grid-cols-2">
-              {imsPolicy.qualityObjectives.length > 0 ? (
-                <div className="bg-slate-50 rounded-3xl p-6">
-                  <h3 className="font-semibold text-hyves-black mb-4">Quality Objectives</h3>
-                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                    {imsPolicy.qualityObjectives.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-
-              {imsPolicy.informationSecurity.length > 0 ? (
-                <div className="bg-slate-50 rounded-3xl p-6">
-                  <h3 className="font-semibold text-hyves-black mb-4">Information Security</h3>
-                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                    {imsPolicy.informationSecurity.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
+      return (
+        <>
+          {imsPolicy.commitment ? (
+            <div className="prose prose-sm max-w-none mb-6">
+              <ReactMarkdown components={markdownComponents}>{imsPolicy.commitment}</ReactMarkdown>
             </div>
-
-            <div className="grid gap-8 md:grid-cols-2 mt-8">
-              {imsPolicy.healthSafety.length > 0 ? (
-                <div className="bg-slate-50 rounded-3xl p-6">
-                  <h3 className="font-semibold text-hyves-black mb-4">Health & Safety</h3>
-                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                    {imsPolicy.healthSafety.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-
-              {imsPolicy.continuousImprovement.length > 0 ? (
-                <div className="bg-slate-50 rounded-3xl p-6">
-                  <h3 className="font-semibold text-hyves-black mb-4">Continuous Improvement</h3>
-                  <ul className="space-y-3 text-slate-600 list-disc list-inside">
-                    {imsPolicy.continuousImprovement.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-            </div>
-
-            {imsPolicy.compliance ? (
-              <div className="mt-8 bg-slate-50 rounded-3xl p-6">
-                <h3 className="font-semibold text-hyves-black mb-4">Compliance</h3>
-                <p className="text-slate-600">{imsPolicy.compliance}</p>
+          ) : null}
+          <div className="grid gap-8 md:grid-cols-2">
+            {imsPolicy.qualityObjectives.length > 0 ? (
+              <div className="bg-slate-50 rounded-3xl p-6">
+                <h3 className="font-semibold text-hyves-black mb-4">Quality Objectives</h3>
+                <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                  {imsPolicy.qualityObjectives.map((item) => (
+                    <li key={item}><ReactMarkdown components={markdownComponents}>{item}</ReactMarkdown></li>
+                  ))}
+                </ul>
               </div>
             ) : null}
-          </>
-        );
-      }
+
+            {imsPolicy.informationSecurity.length > 0 ? (
+              <div className="bg-slate-50 rounded-3xl p-6">
+                <h3 className="font-semibold text-hyves-black mb-4">Information Security</h3>
+                <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                  {imsPolicy.informationSecurity.map((item) => (
+                    <li key={item}><ReactMarkdown components={markdownComponents}>{item}</ReactMarkdown></li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 mt-8">
+            {imsPolicy.healthSafety.length > 0 ? (
+              <div className="bg-slate-50 rounded-3xl p-6">
+                <h3 className="font-semibold text-hyves-black mb-4">Health & Safety</h3>
+                <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                  {imsPolicy.healthSafety.map((item) => (
+                    <li key={item}><ReactMarkdown components={markdownComponents}>{item}</ReactMarkdown></li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {imsPolicy.continuousImprovement.length > 0 ? (
+              <div className="bg-slate-50 rounded-3xl p-6">
+                <h3 className="font-semibold text-hyves-black mb-4">Continuous Improvement</h3>
+                <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                  {imsPolicy.continuousImprovement.map((item) => (
+                    <li key={item}><ReactMarkdown components={markdownComponents}>{item}</ReactMarkdown></li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+
+          {imsPolicy.compliance ? (
+            <div className="mt-8 bg-slate-50 rounded-3xl p-6">
+              <h3 className="font-semibold text-hyves-black mb-4">Compliance</h3>
+              <div className="prose prose-sm max-w-none">
+                <ReactMarkdown components={markdownComponents}>{imsPolicy.compliance}</ReactMarkdown>
+              </div>
+            </div>
+          ) : null}
+        </>
+      );
+    }
 
     if (activePolicy.id === "whistleblower") {
       return (
-        <div className="space-y-6">
-          {whistleblowerContent ? <p className="text-slate-600 leading-relaxed">{whistleblowerContent}</p> : null}
+        <div className="prose prose-sm max-w-none space-y-6">
+          {whistleblowerContent ? <ReactMarkdown components={markdownComponents}>{whistleblowerContent}</ReactMarkdown> : null}
         </div>
       );
     }
@@ -197,7 +218,7 @@ export default function Policies() {
               <h3 className="font-semibold text-hyves-black mb-4">Information Security Principles</h3>
               <ul className="space-y-3 text-slate-600 list-disc list-inside">
                 {imsPolicy.informationSecurity.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item}><ReactMarkdown components={markdownComponents}>{item}</ReactMarkdown></li>
                 ))}
               </ul>
             </div>
