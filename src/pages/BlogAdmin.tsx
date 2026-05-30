@@ -59,6 +59,12 @@ export default function BlogAdmin() {
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<null | { type: "success" | "error"; message: string }>(null);
+  const [teamFiles, setTeamFiles] = useState<{ [seed: string]: File | null }>({
+    richmond: null,
+    ekundayo: null,
+    wisdom: null,
+    precious: null,
+  });
   
   const [postFormData, setPostFormData] = useState({
     title: "",
@@ -191,6 +197,16 @@ export default function BlogAdmin() {
         } catch (e) {
           // ignore
         }
+        // also try to notify team images update if any were uploaded
+        try {
+          if (Object.values(teamFiles).some(Boolean) && typeof window !== "undefined" && "BroadcastChannel" in window) {
+            const bc2 = new BroadcastChannel("policies");
+            bc2.postMessage({ type: "updated" });
+            bc2.close();
+          }
+        } catch (e) {
+          // ignore
+        }
       } else {
         const parts: string[] = [];
         if (!imsResponse.ok) parts.push(`IMS: ${typeof imsBody === "string" ? imsBody : JSON.stringify(imsBody)}`);
@@ -202,6 +218,54 @@ export default function BlogAdmin() {
     } catch (error) {
       console.error("Error saving policies:", error);
       setNotification({ type: "error", message: String(error) });
+    }
+  };
+
+  const handleTeamFileChange = (seed: string, file: File | null) => {
+    setTeamFiles((prev) => ({ ...prev, [seed]: file }));
+  };
+
+  const fileToDataUrl = (file: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  const uploadTeamImages = async () => {
+    const seeds = Object.keys(teamFiles);
+    const parts: string[] = [];
+    try {
+      for (const seed of seeds) {
+        const file = teamFiles[seed];
+        if (!file) continue;
+        const dataUrl = await fileToDataUrl(file);
+        const filename = `${seed}.jpg`;
+        const res = await fetch('/api/upload-team-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename, data: dataUrl })
+        });
+        if (!res.ok) {
+          const txt = await res.text().catch(() => 'upload failed');
+          parts.push(`${seed}: ${txt}`);
+        }
+      }
+      if (parts.length === 0) {
+        setNotification({ type: 'success', message: 'Team images uploaded.' });
+        try {
+          if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+            const bc = new BroadcastChannel('policies'); bc.postMessage({ type: 'updated' }); bc.close();
+          }
+        } catch (e) {}
+        // clear file inputs
+        setTeamFiles({ richmond: null, ekundayo: null, wisdom: null, precious: null });
+      } else {
+        setNotification({ type: 'error', message: `Some uploads failed: ${parts.join('; ')}` });
+      }
+    } catch (err) {
+      console.error('Error uploading team images:', err);
+      setNotification({ type: 'error', message: String(err) });
     }
   };
 
@@ -600,7 +664,33 @@ export default function BlogAdmin() {
                     </div>
                   )}
 
-                  <div className="flex justify-end gap-4">
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-lg font-bold text-hyves-black mb-3">Team Images (upload to update About page)</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {[
+                          { name: "Richmond Oghenedoro", seed: "richmond" },
+                          { name: "Ekundayo Kiyesi", seed: "ekundayo" },
+                          { name: "Wisdom Diala", seed: "wisdom" },
+                          { name: "Precious Obodo", seed: "precious" }
+                        ].map((m) => (
+                          <div key={m.seed} className="space-y-2">
+                            <label className="text-sm font-medium">{m.name}</label>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleTeamFileChange(m.seed, e.target.files && e.target.files[0] ? e.target.files[0] : null)}
+                              className="w-full text-sm"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-3">
+                        <Button type="button" variant="outline" onClick={uploadTeamImages}>Upload Team Images</Button>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-4">
                     <Button type="button" variant="outline" onClick={() => {
                       setImsPolicy(originalImsPolicy);
                       setWhistleblowerPolicy(originalWhistleblowerPolicy);

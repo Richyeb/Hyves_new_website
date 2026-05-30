@@ -1,7 +1,27 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import richmondImg from "@/assets/team/Richmond Photograph.png";
+import ekundayoImg from "@/assets/team/Dayo.png";
+import wisdomImg from "@/assets/team/Wisdom.png";
+import preciousImg from "@/assets/team/Precious2.png";
 
 export default function About() {
+  const [imgVersion, setImgVersion] = useState(0);
+  useEffect(() => {
+    let bc: BroadcastChannel | null = null;
+    try {
+      if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+        bc = new BroadcastChannel("policies");
+        bc.onmessage = (ev) => {
+          if (ev.data?.type === "updated") setImgVersion((v) => v + 1);
+        };
+      }
+    } catch (e) {
+      // ignore
+    }
+    return () => { if (bc) bc.close(); };
+  }, []);
   return (
     <div className="pt-32 pb-20 bg-hyves-bg min-h-screen">
       <div className="container mx-auto px-6">
@@ -54,10 +74,21 @@ export default function About() {
                 ].map((member) => (
                   <div key={member.name} className="group">
                     <div className="aspect-square rounded-2xl bg-slate-100 mb-4 overflow-hidden">
-                      <img 
-                        src={`https://picsum.photos/seed/${member.seed}/400/400`} 
-                        alt={member.name} 
+                      <img
+                        src={(() => {
+                          if (member.seed === 'richmond') return `${richmondImg}?v=${imgVersion}`;
+                          if (member.seed === 'ekundayo') return `${ekundayoImg}?v=${imgVersion}`;
+                          if (member.seed === 'wisdom') return `${wisdomImg}?v=${imgVersion}`;
+                          if (member.seed === 'precious') return `${preciousImg}?v=${imgVersion}`;
+                          return `/assets/team/${member.seed}.jpg?v=${imgVersion}`;
+                        })()}
+                        alt={member.name}
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
+                        onError={(e) => {
+                          const target = e.currentTarget as HTMLImageElement;
+                          target.onerror = null;
+                          target.src = `https://picsum.photos/seed/${member.seed}/400/400`;
+                        }}
                         referrerPolicy="no-referrer"
                       />
                     </div>

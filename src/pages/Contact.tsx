@@ -25,7 +25,8 @@ export default function Contact() {
     const formData = new FormData(form);
     
     const data = {
-      fullName: formData.get("fullName"),
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
       email: formData.get("email"),
       phone: `${formData.get("countryCode")} ${formData.get("phone")}`,
       request: formData.get("request"),
@@ -34,7 +35,7 @@ export default function Contact() {
     // Create mailto link
     const subject = encodeURIComponent("Contact Us Form Submission");
     const body = encodeURIComponent(
-      `Full Name: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nRequest:\n${data.request}`
+      `First Name: ${data.firstName}\nLast Name: ${data.lastName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nRequest:\n${data.request}`
     );
     window.location.href = `mailto:info@hyves.ng?subject=${subject}&body=${body}`;
   };
@@ -54,14 +55,25 @@ export default function Contact() {
 
           <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input 
-                  id="fullName" 
-                  name="fullName"
-                  placeholder="John Doe" 
-                  required 
-                />
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input 
+                    id="firstName" 
+                    name="firstName"
+                    placeholder="John" 
+                    required 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input 
+                    id="lastName" 
+                    name="lastName"
+                    placeholder="Doe" 
+                    required 
+                  />
+                </div>
               </div>
               
               <div className="space-y-2">
