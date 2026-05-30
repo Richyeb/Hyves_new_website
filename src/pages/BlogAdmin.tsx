@@ -607,6 +607,19 @@ export default function BlogAdmin() {
                     }}>
                       Reset
                     </Button>
+                    <Button type="button" variant="outline" onClick={() => {
+                      setImsPolicy({
+                        commitment: "",
+                        qualityObjectives: [],
+                        informationSecurity: [],
+                        healthSafety: [],
+                        compliance: "",
+                        continuousImprovement: []
+                      });
+                      setWhistleblowerPolicy("");
+                    }}>
+                      Clear All
+                    </Button>
                     <Button type="submit" className="bg-hyves-gold text-hyves-black font-bold px-8">
                       <Save className="w-4 h-4 mr-2" />
                       Save Changes
