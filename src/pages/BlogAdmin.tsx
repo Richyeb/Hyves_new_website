@@ -196,6 +196,12 @@ export default function BlogAdmin() {
     }
   };
 
+  const getResponseError = async (res: Response) => {
+    const text = await res.text().catch(() => "");
+    if (text) return text;
+    return `${res.status} ${res.statusText}`;
+  };
+
   const handlePolicySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -222,10 +228,10 @@ export default function BlogAdmin() {
         })
       ]);
 
-      const imsBody = imsResponse.ok ? await imsResponse.json().catch(() => ({})) : await imsResponse.text().catch(() => "");
-      const wbBody = whistleblowerResponse.ok ? await whistleblowerResponse.json().catch(() => ({})) : await whistleblowerResponse.text().catch(() => "");
-      const termsBody = termsResponse.ok ? await termsResponse.json().catch(() => ({})) : await termsResponse.text().catch(() => "");
-      const privacyBody = privacyResponse.ok ? await privacyResponse.json().catch(() => ({})) : await privacyResponse.text().catch(() => "");
+      const imsBody = imsResponse.ok ? await imsResponse.json().catch(() => ({})) : await getResponseError(imsResponse);
+      const wbBody = whistleblowerResponse.ok ? await whistleblowerResponse.json().catch(() => ({})) : await getResponseError(whistleblowerResponse);
+      const termsBody = termsResponse.ok ? await termsResponse.json().catch(() => ({})) : await getResponseError(termsResponse);
+      const privacyBody = privacyResponse.ok ? await privacyResponse.json().catch(() => ({})) : await getResponseError(privacyResponse);
 
       if (imsResponse.ok && whistleblowerResponse.ok && termsResponse.ok && privacyResponse.ok) {
         setOriginalImsPolicy(imsPolicy);
@@ -769,6 +775,8 @@ export default function BlogAdmin() {
                     <Button type="button" variant="outline" onClick={() => {
                       setImsPolicy(originalImsPolicy);
                       setWhistleblowerPolicy(originalWhistleblowerPolicy);
+                      setTermsOfServicePolicy(originalTermsOfServicePolicy);
+                      setPrivacyPolicy(originalPrivacyPolicy);
                     }}>
                       Reset
                     </Button>
