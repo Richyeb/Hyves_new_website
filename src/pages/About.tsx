@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import richmondImg from "@/assets/team/Richmond Photograph.png";
@@ -76,10 +78,10 @@ export default function About() {
                     <div className="aspect-square rounded-2xl bg-slate-100 mb-4 overflow-hidden">
                       <img
                         src={(() => {
-                          if (member.seed === 'richmond') return `${richmondImg}?v=${imgVersion}`;
-                          if (member.seed === 'ekundayo') return `${ekundayoImg}?v=${imgVersion}`;
-                          if (member.seed === 'wisdom') return `${wisdomImg}?v=${imgVersion}`;
-                          if (member.seed === 'precious') return `${preciousImg}?v=${imgVersion}`;
+                          if (member.seed === 'richmond') return `${richmondImg.src}?v=${imgVersion}`;
+                          if (member.seed === 'ekundayo') return `${ekundayoImg.src}?v=${imgVersion}`;
+                          if (member.seed === 'wisdom') return `${wisdomImg.src}?v=${imgVersion}`;
+                          if (member.seed === 'precious') return `${preciousImg.src}?v=${imgVersion}`;
                           return `/assets/team/${member.seed}.jpg?v=${imgVersion}`;
                         })()}
                         alt={member.name}
@@ -122,7 +124,7 @@ export default function About() {
               <p className="text-slate-300 mb-8 max-w-2xl mx-auto">
                 We are always looking for passionate individuals who want to make a real impact.
               </p>
-              <Link to="/careers" className="inline-block bg-hyves-gold text-hyves-black font-bold px-8 py-4 rounded-full hover:bg-hyves-gold/90 transition-colors">
+              <Link href="/join-our-team" className="inline-block bg-hyves-gold text-hyves-black font-bold px-8 py-4 rounded-full hover:bg-hyves-gold/90 transition-colors">
                 View Open Positions
               </Link>
             </section>

@@ -27,7 +27,7 @@ export default function SocialProof() {
           {partners.map((logo, index) => (
   <img
     key={index}
-    src={logo}
+    src={logo.src}
     alt="Partner logo"
     className="h-10 md:h-12 object-contain"
   />

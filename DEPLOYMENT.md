@@ -1,58 +1,54 @@
 # Hyves Deployment Guide
 
-This guide provides the steps to deploy the Hyves platform to a production environment.
+This project now runs as a Next.js application using the App Router.
 
 ## Prerequisites
 
-- Node.js 18 or higher
-- npm or yarn
+- Node.js 20 LTS or 22+
+- npm
 
-## Deployment Steps
-
-### 1. Build the Application
-First, you need to compile the frontend assets for production. This will generate a `dist` folder containing the optimized static files.
+## Build
 
 ```bash
+npm install
 npm run build
 ```
 
-### 2. Prepare the Server
-The application uses a custom Express server (`server.ts`) to serve both the API and the static frontend files.
-
-### 3. Start the Application
-In production, set the `NODE_ENV` environment variable to `production` and start the server.
+## Start
 
 ```bash
-NODE_ENV=production npm start
+npm start
 ```
 
-## Environment Variables
+The production server listens on the port provided by the hosting platform, or `3000` locally.
 
-- `NODE_ENV`: Set to `production` to serve static files from the `dist` folder.
-- `PORT`: The server defaults to port `3000`.
+## API Routes
+
+The previous Express API has been migrated to Next.js route handlers under `app/api`.
+
+- `GET/POST /api/posts`
+- `DELETE /api/posts/:id`
+- `GET/POST /api/roles`
+- `DELETE /api/roles/:id`
+- `GET/PUT /api/ims-policy`
+- `GET/PUT /api/whistleblower-policy`
+- `GET/PUT/POST /api/terms-of-service-policy`
+- `GET/PUT/POST /api/privacy-policy`
+- `POST /api/upload-team-image`
 
 ## Data Persistence
-The current implementation uses local JSON files (`blog-posts.json` and `roles.json`) for data storage. 
-- **Important**: Ensure the server process has write permissions to the root directory.
-- **Recommendation**: For high-scale production, it is recommended to migrate these to a managed database like MongoDB or PostgreSQL.
 
-## Deployment Platforms
+Blog posts, roles, and policy content are currently stored in local JSON files in the project root, with a temporary-directory fallback for read-only environments.
 
-### Cloud Run (Recommended)
-This application is optimized for containerized environments like Google Cloud Run.
-1. Build a Docker image using the provided `package.json`.
-2. Deploy the container to Cloud Run.
-3. The platform will automatically handle the `PORT` and routing.
+For production with multiple instances or serverless deployments, migrate this data to a managed database or object store so updates persist reliably across deployments.
 
-### Manual Server (VPS)
-1. Clone the repository.
-2. Install dependencies: `npm install`.
-3. Build: `npm run build`.
-4. Use a process manager like `pm2` to keep the server running:
-   ```bash
-   pm2 start server.ts --name hyves --interpreter ./node_modules/.bin/tsx
-   ```
-   *Note: If your Node version supports TS stripping, you can use `node server.ts` directly.*
+## Vercel
 
-## Sharing and Preview
-You can always share the latest version of your app using the **Share** button in the AI Studio header. This provides a public URL for stakeholders to review the application.
+Vercel can detect and deploy the Next.js app directly:
+
+```bash
+npm install
+npm run build
+```
+
+No custom rewrite to `index.html` is needed.

@@ -15,7 +15,7 @@ export default function Logo({ className, iconOnly = false, variant = "default" 
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <img
-  src={logo}
+  src={logo.src}
   alt="Logo"
   className="w-30 h-30 object-contain"
 />

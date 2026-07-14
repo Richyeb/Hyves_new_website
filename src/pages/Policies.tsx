@@ -1,7 +1,9 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { Loader2, Shield, AlertTriangle, Lock, Globe, Users } from "lucide-react";
-import { useLocation, Link } from "react-router-dom";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
 interface IMSPolicy {
@@ -60,7 +62,6 @@ const policies = [
 ];
 
 export default function Policies() {
-  const location = useLocation();
   const [selectedPolicy, setSelectedPolicy] = useState("ims");
   const [imsPolicy, setImsPolicy] = useState<IMSPolicy>(defaultPolicy);
   const [whistleblowerContent, setWhistleblowerContent] = useState(defaultWhistleblower.content);
@@ -69,11 +70,17 @@ export default function Policies() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const hash = location.hash.replace("#", "");
-    if (hash && policies.some((policy) => policy.id === hash)) {
-      setSelectedPolicy(hash);
-    }
-  }, [location.hash]);
+    const applyHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash && policies.some((policy) => policy.id === hash)) {
+        setSelectedPolicy(hash);
+      }
+    };
+
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
+  }, []);
 
   const fetchPolicies = async () => {
     setLoading(true);
@@ -299,7 +306,7 @@ const markdownComponents = {
                     return (
                       <Link
                         key={policy.id}
-                        to={`/policies#${policy.id}`}
+                        href={`/policies#${policy.id}`}
                         className={`block rounded-2xl px-4 py-3 transition-all ${isActive ? "bg-hyves-gold/10 border border-hyves-gold text-hyves-black" : "border border-slate-200 bg-slate-50 text-slate-600 hover:border-hyves-gold/70 hover:bg-slate-100"}`}
                         onClick={() => setSelectedPolicy(policy.id)}
                       >

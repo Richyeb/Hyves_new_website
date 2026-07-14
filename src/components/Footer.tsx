@@ -1,5 +1,5 @@
 import { Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Logo from "@/components/Logo";
 
 export default function Footer() {
@@ -49,28 +49,28 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-hyves-black mb-6">Product</h4>
             <ul className="space-y-4">
-              <li><Link to="/product" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Features</Link></li>
-              <li><Link to="/contact" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Get Started</Link></li>
+              <li><Link href="/product" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Features</Link></li>
+              <li><Link href="/contact" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Get Started</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold text-hyves-black mb-6">Company</h4>
             <ul className="space-y-4">
-              <li><Link to="/about" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">About Us</Link></li>
-              <li><Link to="/about" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Team</Link></li>
-              <li><Link to="/about" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Culture</Link></li>
-              <li><Link to="/about" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Join our team</Link></li>
+              <li><Link href="/about" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">About Us</Link></li>
+              <li><Link href="/about" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Team</Link></li>
+              <li><Link href="/about" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Culture</Link></li>
+              <li><Link href="/join-our-team" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Join our team</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold text-hyves-black mb-6">Resources</h4>
             <ul className="space-y-4">
-              <li><Link to="/policies#whistleblower" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Whistleblower Policy</Link></li>
-              <li><Link to="/policies#ims" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">IMS Policy</Link></li>
-              <li><Link to="/policies#information-security" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Information Security Policy</Link></li>
-              <li><Link to="/blog" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Blog</Link></li>
+              <li><Link href="/policies#whistleblower" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Whistleblower Policy</Link></li>
+              <li><Link href="/policies#ims" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">IMS Policy</Link></li>
+              <li><Link href="/policies#information-security" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Information Security Policy</Link></li>
+              <li><Link href="/blog" className="text-slate-500 text-sm hover:text-hyves-gold transition-colors">Blog</Link></li>
             </ul>
           </div>
 
