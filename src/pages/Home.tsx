@@ -1,3 +1,5 @@
+"use client";
+
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
 import Features from "@/components/Features";

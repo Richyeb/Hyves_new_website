@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -29,13 +31,13 @@ export default function Navbar() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
-        scrolled 
-          ? "bg-white/80 backdrop-blur-md border-slate-200 py-1" 
+        scrolled
+          ? "bg-white/80 backdrop-blur-md border-slate-200 py-1"
           : "bg-transparent border-transparent py-2"
       )}
     >
       <div className="container mx-auto px-6 flex items-center justify-between h-14">
-        <Link to="/" className="hover:opacity-80 transition-opacity">
+        <Link href="/" className="hover:opacity-80 transition-opacity">
           <Logo />
         </Link>
 
@@ -44,8 +46,8 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <Link
               key={link.name}
-              to={link.href}
-              className="text-sm font-medium text-slate-600 hover:text-hyves-emerald transition-colors"
+              href={link.href}
+              className="text-sm font-medium text-slate-600 hover:text-hyves-gold transition-colors"
             >
               {link.name === "About Hyves" ? (
                 <span>About <span className="font-bold">Hyves</span></span>
@@ -87,7 +89,7 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
-                  to={link.href}
+                  href={link.href}
                   className="text-lg font-medium text-slate-600"
                   onClick={() => setIsOpen(false)}
                 >

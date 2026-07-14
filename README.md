@@ -1,98 +1,85 @@
 # Hyves - The Operating System for Modern Cooperatives
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" alt="Hyves Banner" width="1200" />
-</p>
+Hyves is an end-to-end ERP system powering digital transformation for modern cooperatives in Nigeria. Manage memberships, finances, loans, and more in one platform.
 
-Hyves is an end-to-end ERP system powering digital transformation for modern cooperatives in Nigeria. Manage memberships, finances, loans, and more all in one platform.
+## Live Website
 
-## 🌐 Live Website
+Visit: [www.hyves.ng](https://www.hyves.ng)
 
-Visit us at: [www.hyves.ng](https://www.hyves.ng)
+## Features
 
-## 🚀 Features
+- Membership management
+- Financial management
+- Loan management
+- Digital transformation for cooperative operations
+- Secure and reliable platform experience
 
-- **Membership Management** - Track and manage cooperative members efficiently
-- **Financial Management** - Handle contributions, savings, and financial records
-- **Loan Management** - Process and track member loans with ease
-- **Digital Transformation** - Modernize traditional cooperative operations
-- **Secure & Reliable** - Built with security best practices
+## Tech Stack
 
-## 🛠️ Tech Stack
+- Frontend: Next.js App Router, React 19, TypeScript
+- Styling: Tailwind CSS, shadcn/ui
+- Animations: Motion
+- API: Next.js route handlers
+- Deployment: Vercel or any Node-compatible host
 
-- **Frontend**: React 19, TypeScript, Vite
-- **Styling**: Tailwind CSS, Shadcn UI
-- **Animations**: Motion (Framer Motion)
-- **Routing**: React Router DOM
-- **Deployment**: Vercel
+## Prerequisites
 
-## 📋 Prerequisites
+- Node.js 20 LTS or 22+
+- npm
 
-- Node.js 18 or higher
-- npm or yarn
+## Getting Started
 
-## 🏁 Getting Started
-
-### Install Dependencies
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-### Development
+Run the development server:
 
 ```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`
+The app will be available at `http://localhost:3000`.
 
-### Build for Production
+Build for production:
 
 ```bash
 npm run build
 ```
 
-### Preview Production Build
+Start the production server:
 
 ```bash
-npm run preview
+npm start
 ```
 
-## 📁 Project Structure
+## Project Structure
 
-```
-hyves-update/
-├── src/
-│   ├── assets/          # Static assets (images, logos)
-│   ├── components/      # React components
-│   │   ├── ui/          # Reusable UI components
-│   │   └── *.tsx        # Page-specific components
-│   ├── lib/             # Utility functions
-│   ├── pages/           # Page components
-│   ├── App.tsx          # Main application component
-│   ├── main.tsx         # Application entry point
-│   └── index.css        # Global styles
-├── public/              # Public static files
-├── server.ts            # Express server for production
-├── vite.config.ts       # Vite configuration
-├── tailwind.config.ts   # Tailwind CSS configuration
-└── package.json         # Dependencies and scripts
+```text
+hyves-website/
++-- app/                 # Next.js routes and API route handlers
++-- public/              # Public static files
++-- src/
+|   +-- assets/          # Imported images and logos
+|   +-- components/      # Shared React components
+|   +-- lib/             # Utilities and JSON storage helpers
+|   +-- pages/           # Page-level client components reused by app routes
+|   +-- index.css        # Global styles
++-- next.config.mjs
++-- tsconfig.json
++-- package.json
 ```
 
-## 🔧 Environment Variables
+## Environment Variables
 
-Create a `.env.local` file with the following:
+Create a `.env.local` file when needed:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
 ```
 
-## 📄 License
+## License
 
-Copyright © 2024 Hyves Technology Limited. All rights reserved.
-
-## 📞 Contact
-
-- Email: hello@hyves.ng
-- Website: www.hyves.ng
+Copyright (c) 2024 Hyves Technology Limited. All rights reserved.
