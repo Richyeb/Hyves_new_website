@@ -5,10 +5,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { motion } from "motion/react";
 import { ArrowLeft, Calendar, Tag, User } from "lucide-react";
+import { normalizeBlogImageUrl } from "@/lib/blog-images";
 
 const BLOGS_ENDPOINT = "https://hyves-backend.onrender.com/api/blogs";
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80";
 
 interface BlogItem {
   _id?: string;
@@ -29,7 +28,7 @@ interface BlogItem {
 
 const getPostId = (post: BlogItem) => post._id || post.id || post.slug || post.title;
 const getPostDate = (post: BlogItem) => post.createdAt || post.updatedAt || post.date || new Date().toISOString();
-const getPostImage = (post: BlogItem) => post.coverImage || post.image || FALLBACK_IMAGE;
+const getPostImage = (post: BlogItem) => normalizeBlogImageUrl(post.coverImage || post.image);
 
 export default function BlogPost() {
   const params = useParams<{ id: string }>();

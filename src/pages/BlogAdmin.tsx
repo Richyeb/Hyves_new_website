@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { AlertTriangle, Briefcase, FileText, Image as ImageIcon, Pencil, Plus, Save, Shield, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AdminProtection from "@/components/AdminProtection";
+import { normalizeBlogImageUrl } from "@/lib/blog-images";
 
 const BLOGS_ENDPOINT = "https://hyves-backend.onrender.com/api/blogs";
 
@@ -181,7 +182,7 @@ export default function BlogAdmin() {
       title: formData.title.trim(),
       excerpt: formData.excerpt.trim(),
       content: formData.content.trim(),
-      coverImage: formData.coverImage.trim(),
+      coverImage: formData.coverImage.trim() ? normalizeBlogImageUrl(formData.coverImage) : "",
       author: formData.author.trim(),
       category: formData.category,
       tags: formData.tags
@@ -376,7 +377,7 @@ export default function BlogAdmin() {
                           value={formData.coverImage}
                           onChange={(event) => setFormData({ ...formData, coverImage: event.target.value })}
                           className="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-hyves-gold outline-none"
-                          placeholder="https://images.unsplash.com/..."
+                          placeholder="Paste any public image URL, including Google Drive share links"
                         />
                         <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400">
                           <ImageIcon className="w-6 h-6" />
