@@ -6,6 +6,8 @@ import { Loader2, Shield, AlertTriangle, Lock, Globe, Users } from "lucide-react
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
+const BLOGS_ENDPOINT = "https://hyves-backend.onrender.com/api/blogs";
+
 interface IMSPolicy {
   commitment: string;
   qualityObjectives: string[];
@@ -13,6 +15,20 @@ interface IMSPolicy {
   healthSafety: string[];
   compliance: string;
   continuousImprovement: string[];
+}
+
+interface BlogPolicyItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  slug?: string;
+  content: string;
+  excerpt?: string;
+  category: "blog" | "career" | "policies";
+  status?: "draft" | "published";
+  createdAt?: string;
+  updatedAt?: string;
+  date?: string;
 }
 
 const defaultPolicy: IMSPolicy = {
@@ -64,10 +80,12 @@ const policies = [
 export default function Policies() {
   const [selectedPolicy, setSelectedPolicy] = useState("ims");
   const [imsPolicy, setImsPolicy] = useState<IMSPolicy>(defaultPolicy);
+  const [backendPolicies, setBackendPolicies] = useState<BlogPolicyItem[]>([]);
   const [whistleblowerContent, setWhistleblowerContent] = useState(defaultWhistleblower.content);
   const [termsContent, setTermsContent] = useState("");
   const [privacyContent, setPrivacyContent] = useState("");
   const [loading, setLoading] = useState(true);
+  const [expandedPolicyIds, setExpandedPolicyIds] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const applyHash = () => {
@@ -85,16 +103,21 @@ export default function Policies() {
   const fetchPolicies = async () => {
     setLoading(true);
     try {
-      const [imsRes, wbRes, termsRes, privacyRes] = await Promise.all([
+      const [imsRes, wbRes, termsRes, privacyRes, backendBlogsRes] = await Promise.all([
         fetch("/api/ims-policy"),
         fetch("/api/whistleblower-policy"),
         fetch("/api/terms-of-service-policy"),
-        fetch("/api/privacy-policy")
+        fetch("/api/privacy-policy"),
+        fetch(BLOGS_ENDPOINT).catch(() => null)
       ]);
       const imsData = imsRes.ok ? await imsRes.json() : null;
       const wbData = wbRes.ok ? await wbRes.json() : null;
       const termsData = termsRes.ok ? await termsRes.json() : null;
       const privacyData = privacyRes.ok ? await privacyRes.json() : null;
+      const backendBlogsData = backendBlogsRes?.ok ? await backendBlogsRes.json() : null;
+      const backendBlogs: BlogPolicyItem[] = Array.isArray(backendBlogsData)
+        ? backendBlogsData
+        : backendBlogsData?.blogs || backendBlogsData?.data || [];
 
       // Accept and apply policy objects even if fields are empty.
       if (imsData) {
@@ -111,6 +134,9 @@ export default function Policies() {
 
       setTermsContent(termsData?.content ?? "");
       setPrivacyContent(privacyData?.content ?? "");
+      setBackendPolicies(
+        backendBlogs.filter((item) => item.category === "policies" && item.status !== "draft" && item.content),
+      );
     } catch (error) {
       console.error("Error loading policies:", error);
     } finally {
@@ -145,6 +171,22 @@ export default function Policies() {
     return policies.find((policy) => policy.id === selectedPolicy) || policies[0];
   }, [selectedPolicy]);
 
+  useEffect(() => {
+    setExpandedPolicyIds({});
+  }, [backendPolicies, selectedPolicy]);
+
+  const getPolicyItemId = (policy: BlogPolicyItem) => policy._id || policy.id || policy.slug || policy.title;
+
+  const getPolicyPreview = (policy: BlogPolicyItem) => {
+    if (policy.excerpt?.trim()) return policy.excerpt.trim();
+
+    return policy.content
+      .replace(/[#*_`>[\]()]/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 280);
+  };
+
 const markdownComponents = {
     h1: ({node, ...props}: any) => <h1 className="text-2xl font-bold text-hyves-black mt-6 mb-4" {...props} />,
     h2: ({node, ...props}: any) => <h2 className="text-xl font-bold text-hyves-black mt-5 mb-3" {...props} />,
@@ -163,6 +205,43 @@ const markdownComponents = {
 
   const renderContent = () => {
     if (activePolicy.id === "ims") {
+      if (backendPolicies.length > 0) {
+        return (
+          <div className="space-y-6">
+            {backendPolicies.map((policy) => {
+              const policyId = getPolicyItemId(policy);
+              const preview = getPolicyPreview(policy);
+              const isExpanded = expandedPolicyIds[policyId];
+
+              return (
+                <article key={policyId} className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+                  <h3 className="text-2xl font-bold text-hyves-black mb-3">{policy.title}</h3>
+
+                  {isExpanded ? (
+                    <div className="prose prose-sm max-w-none">
+                      <ReactMarkdown components={markdownComponents}>{policy.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="text-slate-600 leading-relaxed mb-5">
+                      {preview}
+                      {preview.length < policy.content.trim().length ? "..." : ""}
+                    </p>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setExpandedPolicyIds((current) => ({ ...current, [policyId]: !isExpanded }))}
+                    className="inline-flex items-center justify-center rounded-full bg-hyves-gold px-5 py-3 text-sm font-bold text-hyves-black transition-colors hover:bg-hyves-gold/90"
+                  >
+                    {isExpanded ? "Read Less" : "Read More"}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        );
+      }
+
       return (
         <>
           {imsPolicy.commitment ? (
