@@ -98,8 +98,8 @@ export default function Footer() {
             © {new Date().getFullYear()} Hyves Technology Limited. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-slate-400 text-xs hover:text-hyves-gold">Terms of Service</a>
-            <a href="#" className="text-slate-400 text-xs hover:text-hyves-gold">Privacy Policy</a>
+            <Link href="/policies#terms-of-service" className="text-slate-400 text-xs hover:text-hyves-gold">Terms of Service</Link>
+            <Link href="/privacy" className="text-slate-400 text-xs hover:text-hyves-gold">Privacy Policy</Link>
           </div>
         </div>
       </div>
